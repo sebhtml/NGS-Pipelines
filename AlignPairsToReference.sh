@@ -67,7 +67,7 @@ purgeGroupCache(){
 
 	for i in $(ls $directory)
 	do
-		cacheFile=$(readlink $directory/$i|basename)
+		cacheFile=$(basename $(readlink $directory/$i))
 
 		if test -e $cache/$cacheFile
 		then
