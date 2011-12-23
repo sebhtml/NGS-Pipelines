@@ -1,24 +1,39 @@
 #!/bin/bash
+# author: Sébastien Boisvert
+# date: 2011-12-23
 
 # this is some heavy scripting
 # parallel machines in bash
 # I use variable indirection
 
-referenceFile=$1
-sampleDirectory=$2
-processors=$3
+referenceFileOrigin=$1
+referenceFile=Reference/reference.fasta
 
+# the argument must not be absolute paths.
+sampleDirectoryOrigin=$2
+sampleDirectory=sampleDirectory
+processors=$3
+output=$4
+
+# run a command on a processor
 runCommand(){
-	command=$1
+	processor=$1
+	command=$2
+
+	# log the command
+	echo $command >> Logs/Processor$processor.txt
+
 	echo ""
 	echo "BEGIN $(date)"
-	echo "running supplied command without callback"
+	echo "running in $(pwd)"
 	echo "command= $command"
-	#$command
+	eval $command
 	echo "END $(date)"
+	
 }
 
-runCommands(){
+# run a group of commands on all processors
+runGroupCommands(){
 	commandGroup=$1
 
 	echo ""
@@ -36,7 +51,7 @@ runCommands(){
 		echo "processorVariable= $processorVariable"
 		command=$(eval echo \$$processorVariable)
 		#command=DEBUG$commandGroup$processorNumber
-		runCommand "$command"
+		runCommand $processorNumber "$command"
 		) &
 
 	done
@@ -46,31 +61,85 @@ runCommands(){
 	wait
 }
 
+# purge cache for a group of commands
+purgeGroupCache(){
+	directory=$1
+
+	for i in $(ls $directory)
+	do
+		cacheFile=$(readlink $directory/$i|basename)
+
+		if test -e $cache/$cacheFile
+		then
+			runCommand 0 "rm $cache/$cacheFile"
+			runCommand 0 "ln -s /dev/null $cache/$cacheFile"
+		fi
+	done
+}
+
+mkdir $output
+
+cd $output
+
+mkdir Logs
+
+runCommand 0 "mkdir Reference"
+
+runCommand 0 "ln -s ../$referenceFileOrigin Reference.fasta"
+runCommand 0 "ln -s ../Reference.fasta $referenceFile"
+runCommand 0 "ln -s ../$sampleDirectoryOrigin $sampleDirectory"
+
+runCommand 0 "mkdir meta"
+
+cache=ApplicationCache
+
+runCommand 0 "mkdir $cache"
+
+runCommand 0 "bash --version &> meta/bash.version"
+runCommand 0 "samtools &> meta/samtools.version"
+runCommand 0 "bcftools &> meta/bcftools.version"
+runCommand 0 "bwa &> meta/bwa.version"
+runCommand 0 "samstat -help &> meta/samstat.version"
+runCommand 0 "date > meta/date"
+runCommand 0 "uname -a > meta/uname"
+runCommand 0 "hostname > meta/hostname"
+
+
+
+
 
 # for bwa
-runCommand "bwa index $referenceFile"
+runCommand 0 "bwa index $referenceFile"
 
 # for samtools
-runCommand "samtools faidx $referenceFile"
+runCommand 0 "samtools faidx $referenceFile"
 
-numberOfFiles=$(ls $sampleDirectory|grep fastq|wc -l)
+# move index file in the cache
+for i in $(ls $referenceFile.*)
+do
+	randomFile=$(head /dev/urandom|sha1sum|awk '{print $1}')
+	runCommand 0 "mv $i $cache/$randomFile"
+	runCommand 0 "ln -s ../$cache/$randomFile $i"
+done
+
 
 # we have <processors> processors
-# and we have $numberOfFiles files
+# and we have n files
 # the command is  bwa aln reference reads > sai
 # we have to generate some variables
 
 fileNumber=0
 
-runCommand "mkdir SaiCommands"
+runCommand 0 "mkdir BinaryAlignments"
 
 # generate alignments
 for file in $(ls $sampleDirectory)
 do
 	processorNumber=$(($fileNumber%$processors))
-	command="bwa aln $referenceFile $sampleDirectory/$file>SaiCommands/$file.sai;"
+	randomFile=$(head /dev/urandom|sha1sum|awk '{print $1}')
+	command="( bwa aln $referenceFile $sampleDirectory/$file > $cache/$randomFile ) ; ( ln -s ../$cache/$randomFile BinaryAlignments/$file.sai ) ; "
 
-	processorVariable=processor$processorNumber"SaiCommands"
+	processorVariable=processor$processorNumber"BinaryAlignments"
 	oldValue=$(eval echo \$$processorVariable)
 
 	newValue=$oldValue$command
@@ -82,21 +151,56 @@ do
 	fileNumber=$(($fileNumber+1))
 done
 
-runCommands "SaiCommands"
+runGroupCommands "BinaryAlignments"
+
 
 fileNumber=0
-
-runCommands "mkdir SamCommands"
+runCommand 0 "mkdir SamAlignments"
 
 # generate compressed sam files
 for fileR1 in $(ls $sampleDirectory|grep R1)
 do
 	fileR2=$(echo $fileR1|sed 's/R1/R2/g')
+	fileRX=$(echo $fileR1|sed 's/R1/RX/g')
+
+	randomFile=$(head /dev/urandom|sha1sum|awk '{print $1}')
 
 	processorNumber=$(($fileNumber%$processors))
-	command="bwa sampe $referenceFile $sampleDirectory/$fileR1.sai $sampleDirectory/$fileR2.sai  $sampleDirectory/$fileR1 $sampleDirectory/$fileR2 |gzip > SamCommands/$file.sam.gz;"
+	command=" ( bwa sampe $referenceFile BinaryAlignments/$fileR1.sai BinaryAlignments/$fileR2.sai $sampleDirectory/$fileR1 $sampleDirectory/$fileR2 |gzip > $cache/$randomFile ) ; (ln -s ../$cache/$randomFile SamAlignments/$fileRX.sam.gz ) ; "
 	
-	processorVariable=processor$processorNumber"SamCommands"
+
+	processorVariable=processor$processorNumber"SamAlignments"
+	oldValue=$(eval echo \$$processorVariable)
+
+	newValue=$oldValue$command
+	toEval="$processorVariable=\"$newValue\""
+
+	eval $toEval
+
+	fileNumber=$(($fileNumber+1))
+done
+
+runGroupCommands "SamAlignments"
+
+purgeGroupCache "BinaryAlignments"
+
+
+# do the quality control
+
+fileNumber=0
+
+runCommand 0 "mkdir QualityControls"
+
+# generate compressed sam files
+for samFile in $(ls SamAlignments|grep sam.gz)
+do
+	processorNumber=$(($fileNumber%$processors))
+
+	randomFile=$(head /dev/urandom|sha1sum|awk '{print $1}')
+
+	command=" ( zcat SamAlignments/$samFile | samstat -f sam -n QualityControls/$samFile) ; (mv QualityControls/$samFile.html $cache/$randomFile ) ; ( ln -s ../$cache/$randomFile QualityControls/$samFile.html ) "
+	
+	processorVariable=processor$processorNumber"QualityControls"
 	oldValue=$(eval echo \$$processorVariable)
 
 	newValue=$oldValue$command
@@ -105,29 +209,31 @@ do
 
 	eval $toEval
 
-	newValue=$(eval echo \$$processorVariable)
-
 	fileNumber=$(($fileNumber+1))
 done
 
-runCommands "SamCommands"
+runGroupCommands "QualityControls"
+
+
+
 
 # at this point, we have a .sam.gz file for each pair
 # now we need to generate sorted bam files
 
 fileNumber=0
 
-runCommands "mkdir BamCommands"
+runCommand 0 "mkdir BamAlignments"
 
 # generate compressed sam files
-for samFile in $(ls Alignments|grep sam.gz)
+for samFile in $(ls SamAlignments|grep sam.gz)
 do
 	processorNumber=$(($fileNumber%$processors))
 
-	command="samtools view -o BamCommands/$samFile.bam SamCommands/$samFile;"
-	command=$command"samtools sort BamCommands/$samFile.bam BamCommands/$samFile.sorted;"
+	randomFile=$(head /dev/urandom|sha1sum|awk '{print $1}')
 
-	processorVariable=processor$processorNumber"BamCommands"
+	command=" ( samtools view -bS SamAlignments/$samFile > $cache/$randomFile ) ; (ln -s ../$cache/$randomFile BamAlignments/$samFile.bam ) ; "
+
+	processorVariable=processor$processorNumber"BamAlignments"
 	oldValue=$(eval echo \$$processorVariable)
 
 	newValue=$oldValue$command
@@ -136,30 +242,59 @@ do
 
 	eval $toEval
 
-	newValue=$(eval echo \$$processorVariable)
+	fileNumber=$(($fileNumber+1))
+done
+
+runGroupCommands "BamAlignments"
+
+purgeGroupCache "SamAlignments"
+
+fileNumber=0
+
+runCommand 0 "mkdir SortedBamAlignments"
+
+# generate compressed sam files
+for samFile in $(ls SamAlignments|grep sam.gz)
+do
+	processorNumber=$(($fileNumber%$processors))
+
+	randomFile=$(head /dev/urandom|sha1sum|awk '{print $1}')
+
+	command="( samtools sort BamAlignments/$samFile.bam $cache/$randomFile ) ; ( mv $cache/$randomFile.bam $cache/$randomFile) ; (ln -s ../$cache/$randomFile SortedBamAlignments/$samFile.sorted.bam )"
+
+	processorVariable=processor$processorNumber"SortedBamAlignments"
+	oldValue=$(eval echo \$$processorVariable)
+
+	newValue=$oldValue$command
+
+	toEval="$processorVariable=\"$newValue\""
+
+	eval $toEval
 
 	fileNumber=$(($fileNumber+1))
 done
 
-runCommands "BamCommands"
+runGroupCommands "SortedBamAlignments"
+
+purgeGroupCache "BamAlignments"
 
 
 # generate variation calls
-fileNumber=1
+fileNumber=0
 
-runCommand "mkdir VcfCommands"
+runCommand 0 "mkdir Variations"
+	
+randomFile=$(head /dev/urandom|sha1sum|awk '{print $1}')
 
-command="samtools mpileup -uf reference.fasta $(find BamCommands|grep sorted.bam) | bcftools view -bvcg - > VcfCommands/var.raw.bcf"
+command=" ( samtools mpileup -uf $referenceFile $(find SortedBamAlignments|grep sorted.bam) | bcftools view -bvcg - > $cache/$randomFile ) ; ( ln -s ../$cache/$randomFile Variations/var.raw.bcf ) ; "
 
-runCommand $command
+runCommand 0 "$command"
 
-command="bcftools view VcfCommands/var.raw.bcf > VcfCommands/var.raw.vcf"
+purgeGroupCache "Reference"
 
+randomFile=$(head /dev/urandom|sha1sum|awk '{print $1}')
 
-runCommand $command
+command="( bcftools view Variations/var.raw.bcf > $cache/$randomFile ) ; (ln -s ../$cache/$randomFile Variations/var.raw.vcf ) ; "
 
+runCommand 0 "$command"
 
-ln -s SaiCommands BinaryAlignments
-ln -s SamCommands Alignments
-ln -s BamCommands SortedAlignments
-ln -s VcfCommands Variations

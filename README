@@ -1,1 +1,36 @@
-This is a collection of scripts.
+
+This is a collection of easy-to-use programs.
+
+
+RedWave 
+	aligns reads to a reference and generate a list of variations
+
+VioletRay
+	perform a paired de novo assembly
+
+
+== RedWave ==
+
+RedWave uses bash, coreutils, bwa, gzip, samstat, samtools and bcftools.
+
+
+Usage:
+
+	RedWave ReferenceSequence SampleDirectory NumberOfProcessors OutputDirectory
+
+
+Example:
+
+	RedWave reference.fasta Sample_test 8 Sample_test.analysis
+
+
+== VioletRay ==
+
+VioletRay utilises Open-MPI and Ray.
+
+	VioletRay KmerLength SampleDirectory NumberOfProcessors OutputDirectory
+
+
+Example:
+
+	VioletRay 31 Sample_test 8 Sample_test.analysis
