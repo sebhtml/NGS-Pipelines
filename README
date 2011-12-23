@@ -33,4 +33,4 @@ VioletRay utilises Open-MPI and Ray.
 
 Example:
 
-	VioletRay 31 Sample_test 8 Sample_test.analysis
+	VioletRay 31 Sample_test 32 Sample_test.analysis
