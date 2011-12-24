@@ -19,4 +19,6 @@ module load mpi/openmpi/1.4.3_gcc
 export PATH=/rap/nne-790-ab/software/VioletRay/ray/build-2011-12-23:$PATH
 
 
+# for OrangeSpark
 
+export PATH=/rap/nne-790-ab/software/bowtie2-2.0.0-beta5:$PATH

@@ -7,7 +7,7 @@ do
 	total=$(/rap/nne-790-ab/software/samtools-0.1.18/samtools view $i|wc -l)
 	aligned=$( /rap/nne-790-ab/software/samtools-0.1.18/samtools view $i|grep $token|wc -l)
 	ratio=$(echo "scale=4;100*$aligned/$total"|bc)
-	name=$(basename $i)
+	name=$i
 
 	echo "$name $total $aligned $ratio%"
 done

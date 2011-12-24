@@ -109,7 +109,7 @@ runCommand 0 "hostname > meta/hostname"
 
 
 # for bwa
-runCommand 0 "bwa index $referenceFile"
+runCommand 0 "bowtie2-build $referenceFile $referenceFile"
 
 # for samtools
 runCommand 0 "samtools faidx $referenceFile"
@@ -130,49 +130,27 @@ done
 
 fileNumber=0
 
-runCommand 0 "mkdir BinaryAlignments"
-
-# generate alignments
-for file in $(ls $sampleDirectory)
-do
-	processorNumber=$(($fileNumber%$processors))
-	randomFile=$(head /dev/urandom|sha1sum|awk '{print $1}')
-	command="( bwa aln $referenceFile $sampleDirectory/$file > $cache/$randomFile ) ; ( ln -s ../$cache/$randomFile BinaryAlignments/$file.sai ) ; "
-
-	processorVariable=processor$processorNumber"BinaryAlignments"
-	oldValue=$(eval echo \$$processorVariable)
-
-	newValue=$oldValue$command
-
-	toEval="$processorVariable=\"$newValue\""
-
-	eval $toEval
-
-	fileNumber=$(($fileNumber+1))
-done
-
-runGroupCommands "BinaryAlignments"
-
-
-fileNumber=0
 runCommand 0 "mkdir SamAlignments"
 
-# generate compressed sam files
+# generate alignments
 for fileR1 in $(ls $sampleDirectory|grep _R1_)
 do
 	fileR2=$(echo $fileR1|sed 's/_R1_/_R2_/g')
 	fileRX=$(echo $fileR1|sed 's/_R1_/_RX_/g')
 
-	randomFile=$(head /dev/urandom|sha1sum|awk '{print $1}')
-
 	processorNumber=$(($fileNumber%$processors))
-	command=" ( bwa sampe $referenceFile BinaryAlignments/$fileR1.sai BinaryAlignments/$fileR2.sai $sampleDirectory/$fileR1 $sampleDirectory/$fileR2 |gzip > $cache/$randomFile ) ; (ln -s ../$cache/$randomFile SamAlignments/$fileRX.sam.gz ) ; "
-	
+
+	randomFile=$(head /dev/urandom|sha1sum|awk '{print $1}')
+	randomFiler1=$(head /dev/urandom|sha1sum|awk '{print $1}')
+	randomFiler2=$(head /dev/urandom|sha1sum|awk '{print $1}')
+
+	command="( zcat $sampleDirectory/$fileR1 > $cache/$randomFiler1 ) ; (zcat $sampleDirectory/$fileR2 > $cache/$randomFiler2 ) ; ln -s ../$cache/$randomFiler1 SamAlignments/$fileR1.fastq ; ln -s ../$cache/$randomFiler2 SamAlignments/$fileR2.fastq ; ( bowtie2-align -x $referenceFile -1 SamAlignments/$fileR1.fastq -2 SamAlignments/$fileR2.fastq | gzip > $cache/$randomFile ) ; ( ln -s ../$cache/$randomFile SamAlignments/$fileRX.sam.gz ) ; "
 
 	processorVariable=processor$processorNumber"SamAlignments"
 	oldValue=$(eval echo \$$processorVariable)
 
 	newValue=$oldValue$command
+
 	toEval="$processorVariable=\"$newValue\""
 
 	eval $toEval
@@ -181,8 +159,6 @@ do
 done
 
 runGroupCommands "SamAlignments"
-
-purgeGroupCache "BinaryAlignments"
 
 
 # do the quality control

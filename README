@@ -3,7 +3,13 @@ This is a collection of easy-to-use programs.
 
 
 RedWave 
-	aligns reads to a reference and generate a list of variations
+	aligns reads to a reference with 'bwa aln' and generate a list of variations
+
+BlueTsunami
+	aligns reads to a reference with 'bwa bwasw' and generate a list of variations
+
+OrangeSpark
+	aligns reads to a reference with 'bowtie2' and generate a list of variations
 
 VioletRay
 	perform a paired de novo assembly

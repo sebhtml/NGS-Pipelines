@@ -130,49 +130,20 @@ done
 
 fileNumber=0
 
-runCommand 0 "mkdir BinaryAlignments"
+runCommand 0 "mkdir SamAlignments"
 
 # generate alignments
 for file in $(ls $sampleDirectory)
 do
 	processorNumber=$(($fileNumber%$processors))
 	randomFile=$(head /dev/urandom|sha1sum|awk '{print $1}')
-	command="( bwa aln $referenceFile $sampleDirectory/$file > $cache/$randomFile ) ; ( ln -s ../$cache/$randomFile BinaryAlignments/$file.sai ) ; "
-
-	processorVariable=processor$processorNumber"BinaryAlignments"
-	oldValue=$(eval echo \$$processorVariable)
-
-	newValue=$oldValue$command
-
-	toEval="$processorVariable=\"$newValue\""
-
-	eval $toEval
-
-	fileNumber=$(($fileNumber+1))
-done
-
-runGroupCommands "BinaryAlignments"
-
-
-fileNumber=0
-runCommand 0 "mkdir SamAlignments"
-
-# generate compressed sam files
-for fileR1 in $(ls $sampleDirectory|grep R1)
-do
-	fileR2=$(echo $fileR1|sed 's/_R1_/_R2_/g')
-	fileRX=$(echo $fileR1|sed 's/_R1_/_RX_/g')
-
-	randomFile=$(head /dev/urandom|sha1sum|awk '{print $1}')
-
-	processorNumber=$(($fileNumber%$processors))
-	command=" ( bwa sampe $referenceFile BinaryAlignments/$fileR1.sai BinaryAlignments/$fileR2.sai $sampleDirectory/$fileR1 $sampleDirectory/$fileR2 |gzip > $cache/$randomFile ) ; (ln -s ../$cache/$randomFile SamAlignments/$fileRX.sam.gz ) ; "
-	
+	command="( bwa bwasw $referenceFile $sampleDirectory/$file | gzip > $cache/$randomFile ) ; ( ln -s ../$cache/$randomFile SamAlignments/$file.sam.gz ) ; "
 
 	processorVariable=processor$processorNumber"SamAlignments"
 	oldValue=$(eval echo \$$processorVariable)
 
 	newValue=$oldValue$command
+
 	toEval="$processorVariable=\"$newValue\""
 
 	eval $toEval
@@ -181,8 +152,6 @@ do
 done
 
 runGroupCommands "SamAlignments"
-
-purgeGroupCache "BinaryAlignments"
 
 
 # do the quality control
