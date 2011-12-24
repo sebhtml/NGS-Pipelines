@@ -160,8 +160,8 @@ runCommand 0 "mkdir SamAlignments"
 # generate compressed sam files
 for fileR1 in $(ls $sampleDirectory|grep R1)
 do
-	fileR2=$(echo $fileR1|sed 's/R1/R2/g')
-	fileRX=$(echo $fileR1|sed 's/R1/RX/g')
+	fileR2=$(echo $fileR1|sed 's/_R1_/_R2_/g')
+	fileRX=$(echo $fileR1|sed 's/_R1_/_RX_/g')
 
 	randomFile=$(head /dev/urandom|sha1sum|awk '{print $1}')
 
