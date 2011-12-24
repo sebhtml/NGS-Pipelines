@@ -167,7 +167,7 @@ do
 
 	randomFile=$(head /dev/urandom|sha1sum|awk '{print $1}')
 
-	command=" ( zcat SamAlignments/$samFile | samstat -f sam -n QualityControls/$samFile) ; (mv QualityControls/$samFile.html $cache/$randomFile ) ; ( ln -s ../$cache/$randomFile QualityControls/$samFile.html ) "
+	command=" ( zcat SamAlignments/$samFile | samstat -f sam -n QualityControls/$samFile) ; (mv QualityControls/$samFile.html $cache/$randomFile ) ; ( ln -s ../$cache/$randomFile QualityControls/$samFile.html ) ; "
 	
 	processorVariable=processor$processorNumber"QualityControls"
 	oldValue=$(eval echo \$$processorVariable)
@@ -229,7 +229,7 @@ do
 
 	randomFile=$(head /dev/urandom|sha1sum|awk '{print $1}')
 
-	command="( samtools sort BamAlignments/$samFile.bam $cache/$randomFile ) ; ( mv $cache/$randomFile.bam $cache/$randomFile) ; (ln -s ../$cache/$randomFile SortedBamAlignments/$samFile.sorted.bam )"
+	command="( samtools sort BamAlignments/$samFile.bam $cache/$randomFile ) ; ( mv $cache/$randomFile.bam $cache/$randomFile) ; (ln -s ../$cache/$randomFile SortedBamAlignments/$samFile.sorted.bam ) ; "
 
 	processorVariable=processor$processorNumber"SortedBamAlignments"
 	oldValue=$(eval echo \$$processorVariable)

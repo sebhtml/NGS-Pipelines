@@ -260,7 +260,7 @@ do
 
 	randomFile=$(head /dev/urandom|sha1sum|awk '{print $1}')
 
-	command="( samtools sort BamAlignments/$samFile.bam $cache/$randomFile ) ; ( mv $cache/$randomFile.bam $cache/$randomFile) ; (ln -s ../$cache/$randomFile SortedBamAlignments/$samFile.sorted.bam )"
+	command="( samtools sort BamAlignments/$samFile.bam $cache/$randomFile ) ; ( mv $cache/$randomFile.bam $cache/$randomFile) ; (ln -s ../$cache/$randomFile SortedBamAlignments/$samFile.sorted.bam ) ; "
 
 	processorVariable=processor$processorNumber"SortedBamAlignments"
 	oldValue=$(eval echo \$$processorVariable)
