@@ -9,7 +9,7 @@ pairs=""
 
 for r1 in $(ls $sampleDirectory|grep R1)
 do
-	r2=$(echo $r1|sed 's/R1/R2/g')
+	r2=$(echo $r1|sed 's/_R1_/_R2_/g')
 
 	pairs=$pairs" -p $sampleDirectory/$r1 $sampleDirectory/$r2 "
 done
