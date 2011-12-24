@@ -14,6 +14,15 @@ OrangeSpark
 VioletRay
 	perform a paired de novo assembly
 
+GreenGem (upcoming)
+	perform a paired de novo assembly and identification based on provided libraries
+
+== General architecture ==
+
+=== RedWave, BlueTsunami and OrangeSpark ===
+
+Data is stored in ApplicationCache.
+Computation groups are purged when needed.
 
 == RedWave ==
 
