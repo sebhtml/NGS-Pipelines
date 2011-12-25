@@ -7,11 +7,16 @@ outputDirectory=$4
 
 pairs=""
 
-for r1 in $(ls $sampleDirectory|grep R1)
+for r1 in $(ls $sampleDirectory|grep _R1_)
 do
 	r2=$(echo $r1|sed 's/_R1_/_R2_/g')
-
 	pairs=$pairs" -p $sampleDirectory/$r1 $sampleDirectory/$r2 "
+done
+
+for file1 in $(ls $sampleDirectory|grep _1.fastq|grep -v _R1_)
+do
+	file2=$(echo $r1|sed 's/_1.fastq/_2.fastq/g')
+	pairs=$pairs" -p $sampleDirectory/$file1 $sampleDirectory/$file2 "
 done
 
 command="mpiexec -n $processors Ray -k $kmerLength $pairs -o $outputDirectory"
