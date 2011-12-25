@@ -15,7 +15,7 @@ done
 
 for file1 in $(ls $sampleDirectory|grep _1.fastq|grep -v _R1_)
 do
-	file2=$(echo $r1|sed 's/_1.fastq/_2.fastq/g')
+	file2=$(echo $file1|sed 's/_1.fastq/_2.fastq/g')
 	pairs=$pairs" -p $sampleDirectory/$file1 $sampleDirectory/$file2 "
 done
 
