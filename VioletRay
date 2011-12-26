@@ -5,26 +5,40 @@ sampleDirectory=$2
 processors=$3
 outputDirectory=$4
 
+mkdir $outputDirectory
+cd $outputDirectory
+
+source $DARK_FISH_TECHNOLOGY
+
+DarkFishTechnology_initializeDirectory
+
+DarkFishTechnology_prepareSample $sampleDirectory
+
 pairs=""
 
-for r1 in $(ls $sampleDirectory|grep _R1_)
+for r1 in $(ls Sample|grep _R1_)
 do
 	r2=$(echo $r1|sed 's/_R1_/_R2_/g')
-	pairs=$pairs" -p $sampleDirectory/$r1 $sampleDirectory/$r2 "
+	pairs=$pairs" -p Sample/$r1 Sample/$r2 "
 done
 
-for file1 in $(ls $sampleDirectory|grep _1.fastq|grep -v _R1_)
+for file1 in $(ls Sample|grep _1.fastq|grep -v _R1_)
 do
 	file2=$(echo $file1|sed 's/_1.fastq/_2.fastq/g')
-	pairs=$pairs" -p $sampleDirectory/$file1 $sampleDirectory/$file2 "
+	pairs=$pairs" -p Sample/$file1 Sample/$file2 "
 done
 
-command="mpiexec -n $processors Ray -k $kmerLength $pairs -o $outputDirectory"
+mpiexec -version &> meta/mpiexec.version
+Ray -version &> meta/ray.version
 
-echo "Command= $command"
+command="mpiexec -n $processors Ray -k $kmerLength $pairs -o Assembly"
 
-eval $command
+DarkFishTechnology_runCommand 0 "$command"
 
-
-
+for i in $(ls Assembly)
+do
+	randomFile=$(DarkFishTechnology_generateCacheEntry)
+	mv Assembly/$i $randomFile
+	DarkFishTechnology_linkCacheEntry $randomFile Assembly $i
+done
 

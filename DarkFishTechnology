@@ -1,0 +1,257 @@
+
+# SampleDirectory contains the data (fastq files)
+# Reference.fasta is the reference, if any
+# ApplicationCache contains data files
+# meta contains meta information
+# meta/CacheEntryList contains cached entries
+# Logs contains log files
+
+DarkFishTechnology_generateCacheEntry(){
+	echo "ApplicationCache/$(head /dev/urandom|sha1sum|awk '{print $1}')"
+}
+
+DarkFishTechnology_linkCacheEntry(){
+	cacheEntry=$1
+	group=$2
+	file=$3
+
+	ln -s ../$cacheEntry $group/$file
+
+	echo "$(basename $cacheEntry)	$group	$file" >> meta/CacheEntryList
+}
+
+# run a command on a processor
+DarkFishTechnology_runCommand(){
+	processor=$1
+	command=$2
+
+	# log the command
+	echo $command >> Logs/Processor$processor.txt
+
+	echo ""
+	echo "BEGIN $(date)"
+	echo "running in $(pwd)"
+	echo "command= $command"
+	eval $command
+	echo "END $(date)"
+}
+
+# run a group of commands on all processors
+DarkFishTechnology_runGroupCommands(){
+	commandGroup=$1
+
+	echo ""
+	echo "Initiating command group: $commandGroup"
+	echo "Using $processors processors"
+	echo ""
+
+	# actually do the conversion
+	for processorNumber in $(seq 0 $((processors-1)))
+	do
+		(
+		echo ""
+		echo "Processor $processorNumber"
+		processorVariable=processor$processorNumber$commandGroup
+		echo "processorVariable= $processorVariable"
+		command=$(eval echo \$$processorVariable)
+		#command=DEBUG$commandGroup$processorNumber
+		DarkFishTechnology_runCommand $processorNumber "$command"
+		) &
+
+	done
+
+	# wait for completion
+
+	wait
+}
+
+# purge cache for a group of commands
+DarkFishTechnology_purgeGroupCache(){
+	directory=$1
+
+	for i in $(ls $directory)
+	do
+		cacheFile=$(basename $(readlink $directory/$i))
+
+		if test -e ApplicationCache/$cacheFile
+		then
+			DarkFishTechnology_runCommand 0 "rm ApplicationCache/$cacheFile"
+			DarkFishTechnology_runCommand 0 "ln -s /dev/null ApplicationCache/$cacheFile"
+		fi
+	done
+}
+
+# starting with sam file, finish the thing.
+DarkFishTechnology_finishAlignmentAnalysis(){
+
+	DarkFishTechnology_computeQualityControls
+	DarkFishTechnology_convertSamToBam
+	DarkFishTechnology_sortAlignments
+	DarkFishTechnology_callVariations
+
+}
+
+DarkFishTechnology_computeQualityControls(){
+
+	# do the quality control
+	
+	fileNumber=0
+	
+	DarkFishTechnology_runCommand 0 "mkdir QualityControls"
+	
+	# generate compressed sam files
+	for samFile in $(ls SamAlignments|grep sam.gz)
+	do
+		processorNumber=$(($fileNumber%$processors))
+
+		randomFile=$(DarkFishTechnology_generateCacheEntry)
+	
+		command=" ( zcat SamAlignments/$samFile | samstat -f sam -n QualityControls/$samFile) ; (mv QualityControls/$samFile.html $randomFile ) ; ( DarkFishTechnology_linkCacheEntry $randomFile QualityControls $samFile.html ) ; "
+		
+		processorVariable=processor$processorNumber"QualityControls"
+		oldValue=$(eval echo \$$processorVariable)
+	
+		newValue=$oldValue$command
+	
+		toEval="$processorVariable=\"$newValue\""
+
+		eval $toEval
+	
+		fileNumber=$(($fileNumber+1))
+	done
+
+	DarkFishTechnology_runGroupCommands "QualityControls"
+}
+
+DarkFishTechnology_convertSamToBam(){
+
+
+	# at this point, we have a .sam.gz file for each pair
+	# now we need to generate sorted bam files
+	
+	fileNumber=0
+	
+	DarkFishTechnology_runCommand 0 "mkdir BamAlignments"
+	
+	# generate compressed sam files
+	for samFile in $(ls SamAlignments|grep sam.gz)
+	do
+		processorNumber=$(($fileNumber%$processors))
+	
+		randomFile=$(DarkFishTechnology_generateCacheEntry)
+	
+		command=" ( samtools view -bS SamAlignments/$samFile > $randomFile ) ; ( DarkFishTechnology_linkCacheEntry $randomFile BamAlignments $samFile.bam ) ; "
+	
+		processorVariable=processor$processorNumber"BamAlignments"
+		oldValue=$(eval echo \$$processorVariable)
+	
+		newValue=$oldValue$command
+
+		toEval="$processorVariable=\"$newValue\""
+	
+		eval $toEval
+	
+		fileNumber=$(($fileNumber+1))
+	done
+	
+	DarkFishTechnology_runGroupCommands "BamAlignments"
+	
+	DarkFishTechnology_purgeGroupCache "SamAlignments"
+
+}
+
+DarkFishTechnology_sortAlignments(){
+
+	fileNumber=0
+	
+	DarkFishTechnology_runCommand 0 "mkdir SortedBamAlignments"
+	
+	# generate compressed sam files
+	for samFile in $(ls SamAlignments|grep sam.gz)
+	do
+		processorNumber=$(($fileNumber%$processors))
+	
+		randomFile=$(DarkFishTechnology_generateCacheEntry)
+
+		command="( samtools sort BamAlignments/$samFile.bam $randomFile ) ; ( mv $randomFile.bam $randomFile) ; (DarkFishTechnology_linkCacheEntry $randomFile SortedBamAlignments $samFile.sorted.bam ) ; "
+	
+		processorVariable=processor$processorNumber"SortedBamAlignments"
+		oldValue=$(eval echo \$$processorVariable)
+	
+		newValue=$oldValue$command
+	
+		toEval="$processorVariable=\"$newValue\""
+	
+		eval $toEval
+	
+		fileNumber=$(($fileNumber+1))
+	done
+	
+	DarkFishTechnology_runGroupCommands "SortedBamAlignments"
+	
+	DarkFishTechnology_purgeGroupCache "BamAlignments"
+
+}
+
+DarkFishTechnology_callVariations(){
+
+	# generate variation calls
+	fileNumber=0
+	
+	DarkFishTechnology_runCommand 0 "mkdir Variations"
+		
+	randomFile=$(DarkFishTechnology_generateCacheEntry)
+	
+	command=" ( samtools mpileup -uf Reference/Reference.fasta $(find SortedBamAlignments|grep sorted.bam) | bcftools view -bvcg - > $randomFile ) ; ( DarkFishTechnology_linkCacheEntry $randomFile Variations var.raw.bcf ) ; "
+	
+	DarkFishTechnology_runCommand 0 "$command"
+	
+	DarkFishTechnology_purgeGroupCache "Reference"
+	
+	randomFile=$(DarkFishTechnology_generateCacheEntry)
+	
+	command="( bcftools view Variations/var.raw.bcf > $randomFile ) ; ( DarkFishTechnology_linkCacheEntry $randomFile Variations var.raw.vcf ) ; "
+	
+	DarkFishTechnology_runCommand 0 "$command"
+
+}
+
+DarkFishTechnology_prepareReference(){
+	referenceFileOrigin=$1
+
+	DarkFishTechnology_runCommand 0 "mkdir Reference"
+	DarkFishTechnology_runCommand 0 "ln -s ../$referenceFileOrigin Reference.fasta"
+	DarkFishTechnology_runCommand 0 "ln -s ../Reference.fasta Reference/Reference.fasta"
+
+}
+
+DarkFishTechnology_prepareSample(){
+	sampleDirectoryOrigin=$1
+	DarkFishTechnology_runCommand 0 "ln -s ../$sampleDirectoryOrigin Sample"
+}
+DarkFishTechnology_moveReferenceCache(){
+
+	# move index file in the cache
+	for i in $(ls Reference)
+	do
+		randomFile=$(DarkFishTechnology_generateCacheEntry)
+		DarkFishTechnology_runCommand 0 "mv Reference/$i $randomFile"
+		DarkFishTechnology_runCommand 0 "DarkFishTechnology_linkCacheEntry $randomFile Reference $i"
+	done
+
+
+}
+
+DarkFishTechnology_initializeDirectory(){
+
+	mkdir Logs
+
+	DarkFishTechnology_runCommand 0 "mkdir meta"
+	DarkFishTechnology_runCommand 0 "mkdir ApplicationCache"
+
+	DarkFishTechnology_runCommand 0 "bash --version &> meta/bash.version"
+	DarkFishTechnology_runCommand 0 "date > meta/date"
+	DarkFishTechnology_runCommand 0 "uname -a > meta/uname"
+	DarkFishTechnology_runCommand 0 "hostname > meta/hostname"
+
+}

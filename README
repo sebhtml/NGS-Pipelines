@@ -1,6 +1,13 @@
 
 This is a collection of easy-to-use programs.
 
+They all use the DarkFishTechnology. This technology enables:
+
+ - Creating and purging cache entries that keeps the structure around
+ - parallel processing
+ - command logging
+ - and more
+
 
 RedWave 
 	aligns reads to a reference with 'bwa aln' and generate a list of variations
