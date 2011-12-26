@@ -26,13 +26,12 @@ DarkFishTechnology_prepareSample $sampleDirectoryOrigin
 DarkFishTechnology_runCommand 0 "bash --version &> meta/bash.version"
 DarkFishTechnology_runCommand 0 "samtools &> meta/samtools.version"
 DarkFishTechnology_runCommand 0 "bcftools &> meta/bcftools.version"
-DarkFishTechnology_runCommand 0 "bwa &> meta/bwa.version"
+DarkFishTechnology_runCommand 0 "bowtie2-build --version &> meta/bowtie2-build.version"
 DarkFishTechnology_runCommand 0 "samstat -help &> meta/samstat.version"
 DarkFishTechnology_runCommand 0 "date > meta/date"
 DarkFishTechnology_runCommand 0 "uname -a > meta/uname"
 DarkFishTechnology_runCommand 0 "hostname > meta/hostname"
 
-# for bwa
 DarkFishTechnology_runCommand 0 "bowtie2-build Reference/Reference.fasta Reference/Reference.fasta"
 
 # for samtools
@@ -42,7 +41,6 @@ DarkFishTechnology_moveReferenceCache
 
 # we have <processors> processors
 # and we have n files
-# the command is  bwa aln reference reads > sai
 # we have to generate some variables
 
 fileNumber=0
