@@ -19,7 +19,7 @@ export PATH=/rap/nne-790-ab/software/samstat-1.08/src:$PATH
 
 module load compilers/gcc/4.6.1
 module load mpi/openmpi/1.4.3_gcc
-export PATH=/rap/nne-790-ab/software/VioletRay/ray/build-2011-12-23:$PATH
+export PATH=/rap/nne-790-ab/software/VioletRay/ray/last-build:$PATH
 
 
 # for OrangeSpark
