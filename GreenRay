@@ -1,0 +1,36 @@
+#!/bin/bash
+
+kmerLength=$1
+sampleDirectory=$2
+processors=$3
+outputDirectory=$4
+
+mkdir $outputDirectory
+cd $outputDirectory
+
+source $DARK_FISH_TECHNOLOGY
+
+DarkFishTechnology_initializeDirectory
+
+DarkFishTechnology_prepareSample $sampleDirectory
+
+pairs=$(DarkFishTechnology_getPairs)
+
+mpiexec -version &> meta/mpiexec.version
+Ray -version &> meta/ray.version
+
+command="mpiexec -n $processors Ray -k $kmerLength $pairs -o Assembly "
+
+searchBaseDirectory=$(DarkFishTechnology_getBaseSearchDirectory)
+
+command=$command" -search $searchBaseDirectory/Bacteria-Genomes "
+command=$command" -search $searchBaseDirectory/Bacteria-ProteinCodingGenes "
+command=$command" -search $searchBaseDirectory/Bacteria-RNAGenes "
+command=$command" -search $searchBaseDirectory/Viruses-Genomes "
+command=$command" -search $searchBaseDirectory/Viruses-ProteinCodingGenes "
+command=$command" -search $searchBaseDirectory/Viruses-RNAGenes "
+
+DarkFishTechnology_runCommand 0 "$command"
+
+DarkFishTechnology_postProcessAssembly
+

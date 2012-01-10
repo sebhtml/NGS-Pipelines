@@ -275,3 +275,18 @@ DarkFishTechnology_getPairs(){
 
 	echo $pairs
 }
+
+DarkFishTechnology_postProcessAssembly(){
+
+	for i in $(ls Assembly)
+	do
+		randomFile=$(DarkFishTechnology_generateCacheEntry)
+		mv Assembly/$i $randomFile
+		DarkFishTechnology_linkCacheEntry $randomFile Assembly $i
+	done
+
+}
+
+DarkFishTechnology_getBaseSearchDirectory(){
+	echo $DARK_FISH_TECHNOLOGY_BASE_SEARCH_DIR
+}

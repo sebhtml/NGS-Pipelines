@@ -10,6 +10,6 @@ done
 for i in $(cat SampleList.txt)
 do
 	echo "qsub $group$i.sh"
-done > Launch$group.sh
+done > $group"Launch".sh
 
 

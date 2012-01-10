@@ -19,7 +19,10 @@ pairs=$(DarkFishTechnology_getPairs)
 mpiexec -version &> meta/mpiexec.version
 Ray -version &> meta/ray.version
 
-command="mpiexec -n $processors Ray -k $kmerLength $pairs -o Assembly"
+command="mpiexec -n $processors Ray -k $kmerLength $pairs -o Assembly "
+
+# set the minimum contig length
+command=$command" -minimum-contig-length $kmerLength "
 
 DarkFishTechnology_runCommand 0 "$command"
 
