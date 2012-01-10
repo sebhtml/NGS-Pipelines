@@ -22,7 +22,8 @@ Ray -version &> meta/ray.version
 command="mpiexec -n $processors Ray -k $kmerLength $pairs -o Assembly "
 
 # set the minimum contig length
-command=$command" -minimum-contig-length $kmerLength "
+# at least 2 k-mers are required
+command=$command" -minimum-contig-length $(($kmerLength+1))"
 
 DarkFishTechnology_runCommand 0 "$command"
 

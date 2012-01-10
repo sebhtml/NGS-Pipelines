@@ -3,7 +3,8 @@
 # this is the only file containing paths that needs to be changed to run on another 
 # computer
 
-DARK_FISH_TECHNOLOGY_BASE_SEARCH_DIR=/rap/nne-790-ab/genomes/RayKmerSearchStuff/2011-12-23
+export DARK_FISH_TECHNOLOGY_BASE_SEARCH_DIR=/rap/nne-790-ab/genomes/RayKmerSearchStuff/2011-12-23
+
 DARK_FISH_TECHNOLOGY_DIRECTORY=/rap/nne-790-ab/software/NGS-Pipelines/
 BWA_PATH=/rap/nne-790-ab/software/bwa-0.6.1
 SAMTOOLS_PATH=/rap/nne-790-ab/software/samtools-0.1.18
