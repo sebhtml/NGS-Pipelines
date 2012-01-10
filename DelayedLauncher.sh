@@ -14,6 +14,7 @@ do
 		sleep 1
 	done
 
+	echo "$(date) Launching job"
 	qsub $group$i.sh
 done
 	
