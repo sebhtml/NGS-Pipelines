@@ -15,9 +15,10 @@ DarkFishTechnology_linkCacheEntry(){
 	group=$2
 	file=$3
 
-	ln -s ../$cacheEntry $group/$file
+	fileName=$(basename $cacheEntry)
+	echo "$fileName	$group	$file" >> meta/CacheEntryList
 
-	echo "$(basename $cacheEntry)	$group	$file" >> meta/CacheEntryList
+	ln -s ../$cacheEntry $group/$file
 }
 
 # run a command on a processor
