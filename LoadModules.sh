@@ -9,7 +9,7 @@ DARK_FISH_TECHNOLOGY_DIRECTORY=/rap/nne-790-ab/software/NGS-Pipelines/
 BWA_PATH=/rap/nne-790-ab/software/bwa-0.6.1
 SAMTOOLS_PATH=/rap/nne-790-ab/software/samtools-0.1.18
 BCFTOOLS_PATH=/rap/nne-790-ab/software/samtools-0.1.18/bcftools
-SAMTOOLS_PATH=/rap/nne-790-ab/software/samstat-1.08/src
+SAMSTAT_PATH=/rap/nne-790-ab/software/samstat-1.08/src
 RAY_PATH=/rap/nne-790-ab/software/VioletRay/ray/last-build
 BOWTIE_PATH=/rap/nne-790-ab/software/bowtie2-2.0.0-beta5
 
