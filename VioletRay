@@ -14,21 +14,7 @@ DarkFishTechnology_initializeDirectory
 
 DarkFishTechnology_prepareSample $sampleDirectory
 
-pairs=""
-
-# get pairs with _R1 for left and _R2 for right
-for r1 in $(ls Sample|grep _R1_)
-do
-	r2=$(echo $r1|sed 's/_R1_/_R2_/g')
-	pairs=$pairs" -p Sample/$r1 Sample/$r2 "
-done
-
-# get pairs with _1 for left and _2 for right
-for file1 in $(ls Sample|grep _1.fastq|grep -v _R1_|grep -v _R2_)
-do
-	file2=$(echo $file1|sed 's/_1.fastq/_2.fastq/g')
-	pairs=$pairs" -p Sample/$file1 Sample/$file2 "
-done
+pairs=$(DarkFishTechnology_getPairs)
 
 mpiexec -version &> meta/mpiexec.version
 Ray -version &> meta/ray.version

@@ -8,21 +8,24 @@ They all use the DarkFishTechnology. This technology enables:
  - command logging
  - and more
 
+BlueTsunami
+	aligns reads to a reference with 'bwa bwasw' and generate a list of variations.
 
 RedWave 
-	aligns reads to a reference with 'bwa aln' and generate a list of variations
-
-BlueTsunami
-	aligns reads to a reference with 'bwa bwasw' and generate a list of variations
+	aligns reads to a reference with 'bwa aln' and generate a list of variations.
 
 OrangeSpark
-	aligns reads to a reference with 'bowtie2' and generate a list of variations
+	aligns reads to a reference with 'bowtie2' and generate a list of variations.
 
 VioletRay
-	perform a paired de novo assembly
+	performs a paired de novo assembly with Ray.
 
-GreenGem (upcoming)
-	perform a paired de novo assembly and identification based on provided libraries
+WhiteRay
+	performs a paired de novo assembly for ChIP-Seq data with Ray.
+	
+GreenRay
+	performs a paired de novo assembly, compute biological abundances in the de Bruijn graph,
+	and identifies contigs based on provided libraries. With Ray.
 
 == General architecture ==
 
