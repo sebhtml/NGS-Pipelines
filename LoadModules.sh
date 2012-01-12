@@ -10,7 +10,7 @@ BWA_PATH=/rap/nne-790-ab/software/bwa-0.6.1
 SAMTOOLS_PATH=/rap/nne-790-ab/software/samtools-0.1.18
 BCFTOOLS_PATH=/rap/nne-790-ab/software/samtools-0.1.18/bcftools
 SAMSTAT_PATH=/rap/nne-790-ab/software/samstat-1.08/src
-RAY_PATH=/rap/nne-790-ab/software/VioletRay/ray/last-build
+RAY_PATH=/rap/nne-790-ab/software/RayAppBuilds/last-build
 BOWTIE_PATH=/rap/nne-790-ab/software/bowtie2-2.0.0-beta5
 
 module load compilers/gcc/4.6.1
