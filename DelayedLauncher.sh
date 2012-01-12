@@ -1,15 +1,14 @@
 #!/bin/bash
 
 group=$1
-# assuming 32 cores per job, this is 512 cores
-maximumJobs=16
+maximumNumberOfCores=512
 
 userName=$(whoami)
 
 for i in $(cat SampleList.txt)
 do
 	# wait until some jobs finish
-	while test $(qstat|grep $userName|wc -l) -gt $(($maximumJobs-1))
+	while test $(colosse-info|grep slots|grep using|awk '{print $5}') -ge $(($maximumNumberOfCores))
 	do	
 		sleep 1
 	done
