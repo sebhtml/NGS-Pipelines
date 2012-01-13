@@ -34,3 +34,6 @@ DarkFishTechnology_runCommand 0 "$command"
 
 DarkFishTechnology_postProcessAssembly
 
+cd Assembly/BiologicalAbundances
+
+DetectLife.sh
