@@ -9,7 +9,7 @@ for line in open(sys.argv[1]):
 		continue
 
 	tokens=line.split("\t")
-	ratio=float(tokens[5])
+	ratio=float(tokens[6])
 
 	if ratio<threshold:
 		continue

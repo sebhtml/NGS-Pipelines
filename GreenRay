@@ -29,6 +29,8 @@ command=$command" -search $searchBaseDirectory/Bacteria-RNAGenes "
 command=$command" -search $searchBaseDirectory/Viruses-Genomes "
 command=$command" -search $searchBaseDirectory/Viruses-ProteinCodingGenes "
 command=$command" -search $searchBaseDirectory/Viruses-RNAGenes "
+command=$command" -search $searchBaseDirectory/ARDB-1.0 "
+command=$command" -search $searchBaseDirectory/HumanChromosomes "
 
 DarkFishTechnology_runCommand 0 "$command"
 
