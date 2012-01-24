@@ -8,9 +8,9 @@ detectLife(){
 	thresholds="0.0001 0.001 0.01 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9"
 	selection=0.5
 	
-	cat $group/* |grep '^#'|head -n1 > $group.tsv
+	cat $(ls $group/*|grep -v Identifi) |grep '^#'|head -n1 > $group.tsv
 
-	cat $group/* |grep -v '^#' >> $group.tsv
+	cat $(ls $group/*|grep -v Identifi) |grep -v '^#' >> $group.tsv
 	
 	for i in $thresholds
 	do
