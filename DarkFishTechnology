@@ -90,6 +90,7 @@ DarkFishTechnology_finishAlignmentAnalysis(){
 	DarkFishTechnology_sortAlignments
 	DarkFishTechnology_callVariations
 
+	DarkFishTechnology_computeDepths
 }
 
 DarkFishTechnology_computeQualityControls(){
@@ -215,6 +216,22 @@ DarkFishTechnology_callVariations(){
 	
 	DarkFishTechnology_runCommand 0 "$command"
 
+}
+
+DarkFishTechnology_computeDepths(){
+	DarkFishTechnology_runCommand 0 "mkdir Depths"
+
+	command=" (  ConvertSortedBamFilesToCoverage.sh SortedBamAlignments/* ; mv *.tsv Depths ) "
+
+	DarkFishTechnology_runCommand 0 "$command"
+
+	for i in $(ls Depths)
+	do
+		randomFile=$(DarkFishTechnology_generateCacheEntry)
+		
+		DarkFishTechnology_runCommand 0 "mv Depths/$i $randomFile"
+		DarkFishTechnology_runCommand 0 "DarkFishTechnology_linkCacheEntry $randomFile Depths $i"
+	done
 }
 
 DarkFishTechnology_prepareReference(){
