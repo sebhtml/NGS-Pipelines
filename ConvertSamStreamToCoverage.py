@@ -32,7 +32,7 @@ class SamProcessor:
 	
 	# a line:
 	# DD63XKN1:189:C08FBACXX:5:1101:18149:4470        16      gi|115304210|ref|NC_008363.1|:254-778   1       0       30M     *       0       0       ATGCAAACACAAAACGGTGGCAGACCCACA  IJIJJJIJIJIGGHJJJGHGGHFFFFFCCC  AS:i:30 XS:i:0  XF:i:3  XE:i:1  NM:i:0
-	def updateCacheEntries(self,line):
+	def updateReferencePositionCacheEntries(self,line):
 
 		tokens=line.split("\t")
 
@@ -196,7 +196,7 @@ CONFIG_CACHE_FLUSH_PERIOD= 4096
 virtualProcessor=SamProcessor()
 
 for line in sys.stdin:
-	virtualProcessor.updateCacheEntries(line)
+	virtualProcessor.updateReferencePositionCacheEntries(line)
 
 	if virtualProcessor.getProcessedEntries()%CONFIG_CACHE_FLUSH_PERIOD==0:
 		print "processed "+str(virtualProcessor.getProcessedEntries())+" entries"
