@@ -13,7 +13,8 @@ SAMSTAT_PATH=/rap/nne-790-ab/software/samstat-1.08/src
 RAY_PATH=/rap/nne-790-ab/software/RayAppBuilds/last-build
 BOWTIE_PATH=/rap/nne-790-ab/software/bowtie2-2.0.0-beta5
 
-module load compilers/gcc/4.6.1
+module load compilers/gcc/4.4.2
+module load apps/r-2.10.1
 module load mpi/openmpi/1.4.3_gcc
 
 ##############################################################

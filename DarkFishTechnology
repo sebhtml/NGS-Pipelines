@@ -47,7 +47,7 @@ DarkFishTechnology_runGroupCommands(){
 	echo ""
 
 	# actually do the conversion
-	for processorNumber in $(seq 0 $((processors-1)))
+	for processorNumber in $(seq 0 $(($processors-1)))
 	do
 		(
 		echo ""
@@ -224,6 +224,8 @@ DarkFishTechnology_computeDepths(){
 	command=" (  ConvertSortedBamFilesToCoverage.sh SortedBamAlignments/* ; mv *.tsv Depths ) "
 
 	DarkFishTechnology_runCommand 0 "$command"
+
+	DarkFishTechnology_runCommand 0 "PlotCoverageFigures.sh $processors"
 
 	for i in $(ls Depths)
 	do
