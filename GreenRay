@@ -19,7 +19,7 @@ pairs=$(DarkFishTechnology_getPairs)
 mpiexec -version &> meta/mpiexec.version
 Ray -version &> meta/ray.version
 
-command="mpiexec -n $processors Ray -k $kmerLength $pairs -o Assembly "
+command="mpiexec -output-filename ComputeCore -n $processors Ray -k $kmerLength $pairs -o Assembly "
 
 searchBaseDirectory=$(DarkFishTechnology_getBaseSearchDirectory)
 
