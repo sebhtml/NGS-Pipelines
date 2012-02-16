@@ -1,0 +1,8 @@
+20100916_708YKAAXX_s1_r1_iall.fastq.pileup.Intergenic.txt
+20100916_708YKAAXX_s2_r1_iall.fastq.pileup.Intergenic.txt
+20100916_708YKAAXX_s3_r1_iall.fastq.pileup.Intergenic.txt
+20100916_708YKAAXX_s4_r1_iall.fastq.pileup.Intergenic.txt
+20100916_708YKAAXX_s5_r1_iall.fastq.pileup.Intergenic.txt
+20100916_708YKAAXX_s6_r1_iall.fastq.pileup.Intergenic.txt
+20100916_708YKAAXX_s7_r1_iall.fastq.pileup.Intergenic.txt
+20100916_708YKAAXX_s8_r1_iall.fastq.pileup.Intergenic.txt
