@@ -2,7 +2,6 @@
 if test -d /mnt/scratch_mp2
 then
 
-module purge
 
 echo "I am mp2"
 
@@ -22,7 +21,11 @@ BOWTIE_PATH=$softwareBase/bowtie2-2.0.0-beta5
 
 
 RAY_PATH=$softwareBase/RayAppBuilds/last-build
+
+module purge
+module load gcc/4.6.2
 module load openmpi_gcc64/1.4.3_ofed
+
 
 ##############################################################
 
