@@ -38,13 +38,17 @@
 
 import sys
 
+DUMMY="ed9d97fcce457516ebd75648df295fdf460949d1"
+debug=False
+
 def getChildren(childString):
-	#print childString[0]
+	if debug:
+		print "[debug] childString: "+childString
 	#print childString[len(childString)-1]
 
 	children=[]
 
-	last=0
+	last=1 # skip the (
 	position=0
 
 	active=0
@@ -52,25 +56,52 @@ def getChildren(childString):
 	while position<len(childString):
 		if childString[position]=='(':
 			active+=1
+
+			if debug:
+				print "[debug] got ("
+
 		elif childString[position]==')':
+
+			if debug:
+				print "[debug] got )"
+
 			active-=1
-		elif active==0 and childString[position]==',':
+			
+			if active==0:
+				if debug:
+					print "[debug] got ) and active=0"
+
+				child=childString[last:position]
+				children.append(child)
+
+		elif active==1 and childString[position]==',':
 			child=childString[last:position]
 			children.append(child)
+
+			if debug:
+				print "[debug] got , and active=0"
 
 			#print "Child= "+child
 			last=position+1
 
 		position+=1
 
+	if debug:
+		print "[debug] children: "+str(children)
+
 	return children
 
 def getEdges(parent,rootString):
+
+	if debug:
+		print "[debug] parent= "+parent+" rootString= "+rootString
 
 	firstParenthesis=0
 
 	# if there is no parenthesis, we have nothing to do
 	if not (rootString.find("(")>=0 and rootString.find(")")>=0):
+		if parent!=DUMMY:
+			print parent+"	"+rootString
 		return
 	
 	while firstParenthesis<len(rootString) and rootString[firstParenthesis]!='(':
@@ -95,10 +126,10 @@ def getEdges(parent,rootString):
 
 	root=rootString[secondParenthesis+1:].replace(";","").strip()
 
-	if parent!=-99999:
+	children=getChildren(rootString[(firstParenthesis+0):(secondParenthesis+1)])
+
+	if parent!=DUMMY:
 		print parent+"	"+root
-	
-	children=getChildren(rootString[(firstParenthesis+1):(secondParenthesis)])
 
 	for child in children:
 		getEdges(root,child)
@@ -120,4 +151,4 @@ for line in open(file):
 	rootString+=line.strip()
 
 
-getEdges(-99999,rootString)
+getEdges(DUMMY,rootString)
