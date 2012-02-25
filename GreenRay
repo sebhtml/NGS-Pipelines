@@ -23,10 +23,19 @@ command="mpiexec -output-filename ComputeCore -n $processors Ray -k $kmerLength 
 
 searchBaseDirectory=$(DarkFishTechnology_getBaseSearchDirectory)
 
-for i in $(ls $searchBaseDirectory)
-do
-	command=$command" -search $searchBaseDirectory/$i "
-done
+if test -d $searchBaseDirectory
+then
+
+	for i in $(ls $searchBaseDirectory)
+	do
+		command=$command" -search $searchBaseDirectory/$i "
+	done
+fi
+
+if test -f $TAXONOMY_DIRECTORY/Genome-to-Taxon.tsv
+then
+	command=$command" -with-phylogeny $TAXONOMY_DIRECTORY/Genome-to-Taxon.tsv $TAXONOMY_DIRECTORY/TreeOfLife-Edges.tsv $TAXONOMY_DIRECTORY/Taxon-Names.tsv "
+fi
 
 DarkFishTechnology_runCommand 0 "$command"
 
