@@ -34,6 +34,7 @@ module load mpi/openmpi/1.4.3_gcc
 export DARK_FISH_TECHNOLOGY=$DARK_FISH_TECHNOLOGY_DIRECTORY/DarkFishTechnology
 
 export PATH=$DARK_FISH_TECHNOLOGY_DIRECTORY:$PATH
+export PATH=$DARK_FISH_TECHNOLOGY_DIRECTORY/CopyNumbers:$PATH
 
 # for RedWave and BlueTsunami
 
