@@ -1,23 +1,35 @@
 #!/bin/bash
 # author: Sébastien Boisvert
 
-bamFiles=$@
+bamFiles=""
 arguments=0
 
-for i in $bamFiles
+k=0
+# $@ is the argument list
+for i in $@
 do
-	arguments=$(($arguments+1))
-done 
+	if test $k -ge 2
+	then
+		arguments=$(($arguments+1))
+		bamFiles=$bamFiles" $i"
+	fi
 
-windowLength=1000
-outputDirectory=BinInGenomicWindows
+	k=$(($k+1))
+done 
 
 if test $arguments = 0
 then
 	echo "Usage"
-	echo "BinInGenomicWindows.sh file1.bam [other bam files]"
+	echo "BinInGenomicWindows.sh windowLength outputDirectory file1.bam [other bam files]"
 	exit
 fi
+
+windowLength=$1
+outputDirectory=$2
+
+echo "windowLength= $windowLength"
+echo "outputDirectory= $outputDirectory"
+echo "bamFiles= $bamFiles"
 
 if test $arguments = 1
 then
