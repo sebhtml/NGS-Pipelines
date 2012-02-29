@@ -1,31 +1,44 @@
 #!/usr/bin/python
+#encoding: utf-8
+# author: Sébastien Boisvert
+# license: GPLv3
+
+"""
+usage
+ViewPath.py taxonIdentifier treeFile taxonFile
+
+
+
+treeFile contains the taxonomic tree, one edge per line
+
+taxonFile contains the taxons, each line must have:
+
+taxon identifier	taxon name
+"""
 
 import sys
 
 if len(sys.argv)!=4:
-	print "usage"
-	print sys.argv[0]+" entry tree names"
+	print __doc__
 	sys.exit()
 
-entryFile=sys.argv[1]
 treeFile=sys.argv[2]
 namesFile=sys.argv[3]
 
-mainLine=open(entryFile).read()
-
-tokens=mainLine.split("\t")
-
-identifier=int(tokens[0])
+identifier=int(sys.argv[1])
 
 childTable={}
 parentTable={}
 names={}
+ranks={}
 
 for line in open(namesFile):
 	tokens=line.split("\t")
 	key=int(tokens[0])
 	description=tokens[1].strip()
+	rank=tokens[2].strip()
 	names[key]=description
+	ranks[key]=rank
 
 for line in open(treeFile):
 	tokens=line.split("\t")
@@ -46,13 +59,13 @@ path=[]
 
 current=identifier
 
+path.append(current)
+
 while current in parentTable:
-	path.append(current)
 	current=parentTable[current]
+	path.append(current)
 
 i=0
-
-print mainLine
 
 print "identifier: "+str(identifier)
 print "path length: "+str(len(path))
@@ -68,14 +81,15 @@ while i>=0:
 
 path=newPath
 
-
 for i in path:
 	description="Unknown (id="+str(i)+")"
 
 	if i in names:
 		description=names[i]
 
-	print "/",
-	print description+"",
+	print "-"
+	print " rank= "+ranks[i]
+	print " taxon= "+description
+	print " id= "+str(i)
 
 print ""
