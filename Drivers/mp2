@@ -10,6 +10,8 @@ projectBase=/mnt/scratch_mp2/corbeil/corbeil_group
 
 export DARK_FISH_TECHNOLOGY_BASE_SEARCH_DIR=$projectBase/genomes/RayKmerSearchStuff/last-build
 
+TAXONOMY_DIRECTORY=$projectBase/genomes/taxonomy/last-build
+
 softwareBase=$projectBase/software
 
 DARK_FISH_TECHNOLOGY_DIRECTORY=$softwareBase/NGS-Pipelines/
