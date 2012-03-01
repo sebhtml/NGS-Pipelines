@@ -34,7 +34,7 @@ fi
 
 if test -f $TAXONOMY_DIRECTORY/Genome-to-Taxon.tsv
 then
-	command=$command" -with-phylogeny $TAXONOMY_DIRECTORY/Genome-to-Taxon.tsv $TAXONOMY_DIRECTORY/TreeOfLife-Edges.tsv $TAXONOMY_DIRECTORY/Taxon-Names.tsv "
+	command=$command" -with-taxonomy $TAXONOMY_DIRECTORY/Genome-to-Taxon.tsv $TAXONOMY_DIRECTORY/TreeOfLife-Edges.tsv $TAXONOMY_DIRECTORY/Taxon-Names.tsv "
 fi
 
 DarkFishTechnology_runCommand 0 "$command"

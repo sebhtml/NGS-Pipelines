@@ -199,7 +199,8 @@ for line in open(fastaFile):
 		deepestKey=None
 		for part2 in tokens:
 			part=part2.strip()
-			if len(part)<3:
+
+			if len(part)<=3:
 				continue
 
 			code=part[0:3]
@@ -212,6 +213,7 @@ for line in open(fastaFile):
 			print "key= "+deepestKey
 
 		if deepestKey not in greenGeneKeyToNumber:
+			print "key= "+deepestKey
 			print "Warning: not in green genes taxonomy:"
 			print header.strip()
 			keyNotFound+=1
@@ -229,7 +231,7 @@ for line in open(fastaFile):
 		genomeToTaxonForGreenGenes.write(str(greenGeneGenomeNumber)+"	"+str(taxonNumber)+"\n")
 
 		fastaFileWithNamespace.write(">gi|"+str(greenGeneGenomeNumber)+"| "+header.strip().replace(">","")+"\n")
-		fastaFileWithNamespace.write(sequence)
+		fastaFileWithNamespace.write(sequence+"\n")
 				
 	elif parity==0:
 		processed+=1
