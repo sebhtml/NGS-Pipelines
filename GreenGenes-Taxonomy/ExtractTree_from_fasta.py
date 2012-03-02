@@ -116,7 +116,7 @@ for line in sys.stdin:
 		parentVertex=path[i]
 		childVertex=path[i+1]
 
-		if isDefined(parentVertex) and isDefined(childVertex):
+		if isDefined(parentVertex) and isDefined(childVertex) and parentVertex!=childVertex:
 			if parentVertex not in arcs:
 				arcs[parentVertex]={}
 
