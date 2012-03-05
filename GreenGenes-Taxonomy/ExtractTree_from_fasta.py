@@ -73,8 +73,15 @@ verticesToNumbers={}
 gotHeader=False
 debug=False
 
+printableVertices={}
+
 processed=0
 PERIOD=10000
+
+def getKey(i,path):
+	if i==0:
+		return path[0]
+	return path[i-1]+path[i]
 
 for line in sys.stdin:
 
@@ -113,31 +120,30 @@ for line in sys.stdin:
 	i=0
 	# add the vertices
 
-	printed=False
-	for vertex in path:
-		# we need a valid parent to avoid vertices without parent, except for the root.
-		if not printed and i>0 and not isDefined(path[i-1]):
-			print "Warning: path is invalid -> "+str(path)
-			#i+=1
-			#continue
-			printed=True
+	while i<len(path):
 
-		if isDefined(vertex):
-			vertices[vertex]=0
+		key=getKey(i,path)
+		
+		vertices[key]=0
+		printableVertices[key]=path[i][3:]
 		
 		i+=1
 
 	# add the arcs
 	i=0
 	while i<(len(path)-1):
-		parentVertex=path[i]
-		childVertex=path[i+1]
+		parentVertex=getKey(i,path)
+		childVertex=getKey(i+1,path)
 
-		if isDefined(parentVertex) and isDefined(childVertex) and parentVertex!=childVertex:
-			if parentVertex not in arcs:
-				arcs[parentVertex]={}
+		if parentVertex==childVertex:
+			print "Warning: loop for "+parentVertex+" path= "+str(path)
+			i+=1
+			continue
 
-			arcs[parentVertex][childVertex]=1
+		if parentVertex not in arcs:
+			arcs[parentVertex]={}
+
+		arcs[parentVertex][childVertex]=1
 
 		i+=1
 
@@ -161,7 +167,7 @@ while i<len(vertexList):
 	
 	taxonNumber=i
 	taxonOperationCode=vertexName[0:3]
-	taxonName=vertexName[3:]
+	taxonName=printableVertices[vertexName]
 	taxonRank=ranks[taxonOperationCode]
 	
 	verticesToNumbers[vertexName]=taxonNumber
