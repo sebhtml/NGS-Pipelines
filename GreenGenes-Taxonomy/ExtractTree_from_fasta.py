@@ -104,7 +104,7 @@ for line in sys.stdin:
 		if code in ranks:
 			key=part.replace(";","")
 
-			# don't add empty vertices
+			# stop as soon as we have an empty thing...
 			if len(key)==len(code):
 				continue
 
@@ -112,12 +112,15 @@ for line in sys.stdin:
 
 	i=0
 	# add the vertices
+
+	printed=False
 	for vertex in path:
 		# we need a valid parent to avoid vertices without parent, except for the root.
-		if i>0 and not isDefined(path[i-1]):
+		if not printed and i>0 and not isDefined(path[i-1]):
 			print "Warning: path is invalid -> "+str(path)
-			i+=1
-			continue
+			#i+=1
+			#continue
+			printed=True
 
 		if isDefined(vertex):
 			vertices[vertex]=0

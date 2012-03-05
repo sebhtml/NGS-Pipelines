@@ -17,6 +17,21 @@ if len(sys.argv)!=3:
 
 parents={}
 children={}
+names={}
+ranks={}
+
+def printVertex(vertex):
+	return "(taxon (identifier "+str(vertex)+") (taxon "+str(names[vertex])+") (rank "+ranks[vertex]+"))"
+	
+for line in open(sys.argv[2]):
+	tokens=line.split("\t")
+
+	vertex=int(tokens[0])
+	name=tokens[1].strip()
+	rank=tokens[2].strip()
+	
+	names[vertex]=name
+	ranks[vertex]=rank
 
 for line in open(sys.argv[1]):
 	tokens=line.split("\t")
@@ -24,7 +39,8 @@ for line in open(sys.argv[1]):
 	child=int(tokens[1])
 
 	if child in parents:
-		print "Error, "+str(child)+" already has parent "+str(parents[child])+" Tried to add second parent "+str(parent)
+		print ""
+		print "Error, "+printVertex(child)+" already has parent "+printVertex(parents[child])+" Tried to add second parent "+printVertex(parent)
 
 	parents[child]=parent
 
