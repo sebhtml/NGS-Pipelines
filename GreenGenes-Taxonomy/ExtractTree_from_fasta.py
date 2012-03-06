@@ -74,6 +74,7 @@ gotHeader=False
 debug=False
 
 printableVertices={}
+vertexRanks={}
 
 processed=0
 PERIOD=10000
@@ -126,6 +127,7 @@ for line in sys.stdin:
 		
 		vertices[key]=0
 		printableVertices[key]=path[i][3:]
+		vertexRanks[key]=path[i][0:3]
 		
 		i+=1
 
@@ -166,7 +168,7 @@ while i<len(vertexList):
 	vertexName=vertexList[i]
 	
 	taxonNumber=i
-	taxonOperationCode=vertexName[0:3]
+	taxonOperationCode=vertexRanks[vertexName]
 	taxonName=printableVertices[vertexName]
 	taxonRank=ranks[taxonOperationCode]
 	
