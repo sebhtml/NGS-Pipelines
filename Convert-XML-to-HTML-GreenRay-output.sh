@@ -7,6 +7,8 @@ project=$1
 
 echo "Project: $project"
 
+XSL_SHEETS=$RAY_PATH/scripts/xsl-xml
+
 for i in $(ls $project)
 do 
 	#echo "Sample: $i"
@@ -20,7 +22,7 @@ do
 	for j in $(find $project/$i|grep Taxons.xml$)
 	do
 		echo "File: $j"
-		xsltproc /home/sboisver12/git-clones/ray/scripts/xsl-xml/Taxons-to-html.xsl $j > $j-entries.html
-		xsltproc /home/sboisver12/git-clones/ray/scripts/xsl-xml/Taxons-to-html-tables.xsl $j > $j-tables.html
+		xsltproc $XSL_SHEETS/Taxons-to-html.xsl $j > $j-entries.html
+		xsltproc $XSL_SHEETS/Taxons-to-html-tables.xsl $j > $j-tables.html
 	done
 done
