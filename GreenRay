@@ -39,6 +39,7 @@ fi
 
 DarkFishTechnology_runCommand 0 "$command"
 
-DarkFishTechnology_postProcessAssembly
+# uncomment to use the ApplicationCache facility
+# DarkFishTechnology_postProcessAssembly
 
 
