@@ -1,0 +1,6 @@
+Programs must be chained.
+
+./GetGeneEntries.py input.vcf input.gff > output.vcf
+
+
+ComputeCodons..py uses IUPAC-code.txt.

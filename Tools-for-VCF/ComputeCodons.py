@@ -7,7 +7,7 @@ import sys
 
 if len(sys.argv)!=5:
 	print "Usage"
-	print sys.argv[0]+" variations.vcf positions.gff codons.ncbi geneSequences.fasta > variationsWithCodons.txt"
+	print sys.argv[0]+" variations(withGenes).vcf positions.gff codes geneSequences.fasta > variationsWithCodons.txt"
 	print "The gff file must be sorted."
 	sys.exit()
 
@@ -71,8 +71,19 @@ for line in open(positions):
 
 #LmjF.01.0800    673     GeneDB|LmjF.01  245206  .       G       T       10.4    .       DP=9;VDB=0.0132;AF1=0.5;AC1=1;DP4=3,3,0,2;MQ=37;FQ=13.2;PV4=0.46,0.43,1,0.15    GT:PL:GQ        0/1:40,0,151:42
 
+# update: 
+# vcf
+# in gff: apidb|LinJ.01
+# in vcf: GeneDB|xyz
+
+# gene	geneposition	GeneDB|LinJ.00  13503   .       G       C 
 
 for line in open(pileup):
+	if len(line)==0:
+		continue
+	if line[0]=='#':
+		continue
+
 	tokens=line.split()
 	chromosome=tokens[2].replace("GeneDB|","apidb|")
 	position=int(tokens[3])
@@ -109,6 +120,11 @@ for line in open(pileup):
 	if wildCodonAccordingToGeneSequence[nucleotidePositionInCodon-1]!=ref:
 		print "Error: nucleotide is not the same in the CDS and chromosomes files."
 		continue
+
+	if observed not in codeEntries:
+		print "Error: nucleotid code "+observed+" is not in IUPAC"
+		continue
+
 	for newNucleotide in codeEntries[observed]:
 		if geneStrand=="-":
 			newNucleotide=complement(newNucleotide)
