@@ -1,0 +1,29 @@
+
+
+1. obtenir seulement les variations dans les gènes
+
+[@colosse1 Variations]$ ~/git-clones/NGS-Pipelines/Tools-for-VCF/GetGeneEntries.py var.raw.vcf Linfantum_TriTrypDB-4.0.gff > var.raw.vcf.GetGeneEntries
+
+2. obtenir les codons
+
+[@colosse1 Variations]$ ~/git-clones/NGS-Pipelines/Tools-for-VCF/ComputeCodons.py var.raw.vcf.GetGeneEntries Linfantum_TriTrypDB-4.0.gff ~/git-clones/NGS-Pipelines/Tools-for-VCF/IUPAC-code.txt LinfantumAnnotatedCDS_TriTrypDB-4.0.fasta> var.raw.vcf.ComputeCodons.1
+
+[@colosse1 Variations]$ grep -v Error var.raw.vcf.ComputeCodons.1 > var.raw.vcf.ComputeCodons
+
+
+il y a des erreurs car les fichiers GeneDB sont pas consistents.
+(longueur d'un gène différente dans gff versus fasta).
+
+
+3. traduire les codons
+
+[@colosse1 Variations]$ ~/git-clones/NGS-Pipelines/Tools-for-VCF/GetAminoAcids.py var.raw.vcf.ComputeCodons TheMoldCodons.ncbi > var.raw.vcf.GetAminoAcids.1
+
+[@colosse1 Variations]$ grep -v Error var.raw.vcf.GetAminoAcids.1 > var.raw.vcf.GetAminoAcids
+
+
+4. obtenir un résumé
+
+[@colosse1 Variations]$ awk '{print $1" "$2" "$21" "$22}' var.raw.vcf.GetAminoAcids|head
+LinJ.34.4340 249 V V
+...
