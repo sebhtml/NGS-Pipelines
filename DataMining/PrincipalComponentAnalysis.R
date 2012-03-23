@@ -130,3 +130,5 @@ points(x[group1+1:columns],y[group1+1:columns],main=paste("Method= ",method),col
 
 dev.off()
 
+write.table(signals,file=paste(prefix,".re-representation.txt",sep=""),sep="\t")
+write.table(principalComponents,file=paste(prefix,".baseVectors.txt",sep=""),sep="\t")
