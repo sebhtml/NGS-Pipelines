@@ -90,7 +90,8 @@ DarkFishTechnology_finishAlignmentAnalysis(){
 	DarkFishTechnology_sortAlignments
 	DarkFishTechnology_callVariations
 
-	DarkFishTechnology_computeDepths
+	# this is disabled because it generates too many files
+	#DarkFishTechnology_computeDepths
 }
 
 DarkFishTechnology_computeQualityControls(){
