@@ -36,7 +36,7 @@ for line in open(geneSequences):
 	if line[0]=='>':
 		if name!="":
 			sequences[name]=seq
-		name=line.split()[0].replace('>GeneDB|','')
+		name=line.split()[0].replace('>','').replace("GeneDB|","")
 		seq=""
 	else:
 		seq+=line.strip()
@@ -63,7 +63,9 @@ for line in open(positions):
 		startPosition=int(tokens[3])
 		endPosition=int(tokens[4])
 		strand=tokens[6]
-		geneName=tokens[8].split(";")[0].replace('ID=apidb|','').replace("rna_","").replace("-1","")
+
+		geneName=tokens[8].split(";")[0].replace('ID=','').replace("rna_","").replace("-1","").replace("apidb|","")
+
 		if chromosome not in genePositions:
 			genePositions[chromosome]={}
 		genePositions[chromosome][geneName]=[startPosition,endPosition,strand]
@@ -90,6 +92,15 @@ for line in open(pileup):
 	ref=tokens[5]
 	observed=tokens[6]
 	geneName=tokens[0].strip()
+
+	if not chromosome in genePositions:
+		print "Error "+chromosome+" is not in the gff file"
+		continue
+
+	if not geneName in genePositions[chromosome]:
+		print "Error "+geneName+" is not in the gff file for chromosome "+chromosome
+		continue
+		
 	geneStart=genePositions[chromosome][geneName][0]
 	geneEnd=genePositions[chromosome][geneName][1]
 	geneStrand=genePositions[chromosome][geneName][2]
@@ -105,8 +116,15 @@ for line in open(pileup):
 
 	nucleotidePositionInCodon=(positionInGene-1)%3+1
 	codonPosition=positionInGene-nucleotidePositionInCodon+1
+
 	geneNameCorrected=geneName.replace('apidb|rna_','').replace("-1","")
+
+	if not geneNameCorrected in sequences:
+		print "Error: "+geneNameCorrected+" is not in the gene fasta file."
+		continue
+
 	geneSequence=sequences[geneNameCorrected]
+
 	if positionInGene>=len(geneSequence):
 		print "Error: positional error, length="+str(len(geneSequence))+", position="+str(positionInGene)
 		continue
@@ -122,7 +140,7 @@ for line in open(pileup):
 		continue
 
 	if observed not in codeEntries:
-		print "Error: nucleotid code "+observed+" is not in IUPAC"
+		print "Error: nucleotide code "+observed+" is not in IUPAC"
 		continue
 
 	for newNucleotide in codeEntries[observed]:

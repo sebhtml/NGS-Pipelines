@@ -48,7 +48,7 @@ for line in open(pileup):
 			continue
 
 	if wild not in codonEntries:
-		print "Error, invalid codon "+wild
+		print "Error, invalid codon <"+wild+">"
 		continue
 	if observed not in codonEntries:
 		print "Error, invalid codon "+observed
