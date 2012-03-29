@@ -7,6 +7,9 @@ then
 echo "[Driver] Hello, I am colosse, am I your favorite super computer ?"
 
 module purge
+module load compilers/gcc/4.6.1
+module load mpi/openmpi/1.4.5_gcc
+
 
 # this script probably only works on colosse
 # this is the only file containing paths that needs to be changed to run on another 
@@ -23,10 +26,6 @@ BCFTOOLS_PATH=/rap/nne-790-ab/software/samtools-0.1.18/bcftools
 SAMSTAT_PATH=/rap/nne-790-ab/software/samstat-1.08/src
 export RAY_PATH=/rap/nne-790-ab/software/RayAppBuilds/last-build
 BOWTIE_PATH=/rap/nne-790-ab/software/bowtie2-2.0.0-beta5
-
-module load compilers/gcc/4.4.2
-module load apps/r-2.10.1
-module load mpi/openmpi/1.4.3_gcc
 
 ##############################################################
 
