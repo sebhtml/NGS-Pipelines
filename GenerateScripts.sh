@@ -1,15 +1,28 @@
-group=$1
+#!/bin/bash
+# Sébastien Boisvert
+# this script is called as follows:
+
+# GenerateScripts.sh Template.sh SampleList.txt schedulerCommand
+# examples:
+
+# GenerateScripts.sh GreenRayTemplate.sh SampleList.txt msub
+# GenerateScripts.sh GreenRayTemplate.sh SampleList.txt qsub
+
+template=$1
+list=$2
+schedulerCommand=$3
+
+massiveSubmit=$template"-Launch.sh"
+
+echo ""> $massiveSubmit
 
 for i in $(cat SampleList.txt)
 do
 	command="s/__SAMPLE__/$i/g"
-	cp $group"Template.sh" $group$i.sh
-	sed -i $command $group$i.sh
+	item=$template-$i.sh
+	cp $template $item
+	sed -i $command $item
+	echo $schedulerCommand $item >> $massiveSubmit
 done
-
-for i in $(cat SampleList.txt)
-do
-	echo "qsub $group$i.sh"
-done > $group"Launch".sh
 
 
