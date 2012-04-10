@@ -6,24 +6,21 @@
 
 arguments=commandArgs(trailingOnly = TRUE)
 
-if(length(arguments) != 6){
+if(length(arguments) != 2){
 	print("incorrect usage")
 	print("usage")
 	print("")
-	print("PrincipalComponentAnalysis.R <matrix> <method> <component1> <component2> <group1Count> <group2Count>")
+	print("PrincipalComponentAnalysis.R <matrix> <method>")
 	print("  <matrix is a tab-separated file with attributes as rows and samples as columns, with headers and first column as attribute names")
 	print("  <method> is eigen or svd")
-	print("  <component1> and <component2> should be 1 and 2 unless something else is desired")
-	print("  <group1Count> is the number of samples in group1")
-	print("  <group2Count> is the number of samples in group2")
 	print("")
 	print("Outputs")
 	print(" data=<matrix>,method=<method>.pdf")
 
 	print("Example:")
-	print("PrincipalComponentAnalysis.R Matrix.txt svd 1 2 124 0")
-	print("PrincipalComponentAnalysis.R Matrix.txt eigen 1 2 124 0")
-	print("PrincipalComponentAnalysis.R Matrix.txt svd 1 2 25 99")
+	print("PrincipalComponentAnalysis.R Matrix.txt svd")
+	print("PrincipalComponentAnalysis.R Matrix.txt eigen")
+	print("PrincipalComponentAnalysis.R Matrix.txt svd")
 	quit()
 }
 
@@ -31,12 +28,9 @@ minimumProportion=0
 
 file=arguments[1]
 method=arguments[2]
-component1=as.integer(arguments[3])
-component2=as.integer(arguments[4])
-group1=as.integer(arguments[5])
-group2=as.integer(arguments[6])
+component1=1
+component2=2
 
-prefix=paste("data=",file,",method=",method,",component1=",component1,",component2=",component2,",",group1,",",group2,sep="")
 
 
 # load the file
@@ -45,6 +39,11 @@ data=as.matrix(read.table(file,header=TRUE,row.names=1,sep="\t"))
 #  get dimensions
 columns=length(data[1,])
 rows=length(data[,1])
+
+group1=columns
+group2=0
+
+prefix=paste("data=",file,",method=",method,",component1=",component1,",component2=",component2,",",group1,",",group2,sep="")
 
 cat("method= ",method," rows= ",rows," columns= ",columns," group1= ",group1," group2= ",group2,"\n")
 
