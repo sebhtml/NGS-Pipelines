@@ -286,12 +286,20 @@ DarkFishTechnology_getPairs(){
 		pairs=$pairs" -p Sample/$r1 Sample/$r2 "
 	done
 
-	# get pairs with _1 for left and _2 for right
+	# get pairs with _1 for left and _2 for right, fastq
 	for file1 in $(ls Sample|grep _1.fastq|grep -v _R1_|grep -v _R2_)
 	do
 		file2=$(echo $file1|sed 's/_1.fastq/_2.fastq/g')
 		pairs=$pairs" -p Sample/$file1 Sample/$file2 "
 	done
+
+	# get pairs with _1 for left and _2 for right, fasta
+	for file1 in $(ls Sample|grep _1.fasta|grep -v _R1_|grep -v _R2_)
+	do
+		file2=$(echo $file1|sed 's/_1.fasta/_2.fasta/g')
+		pairs=$pairs" -p Sample/$file1 Sample/$file2 "
+	done
+
 
 	echo $pairs
 }
