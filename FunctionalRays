@@ -1,0 +1,35 @@
+#!/bin/bash
+
+kmerLength=$1
+sampleDirectory=$2
+processors=$3
+outputDirectory=$4
+
+mkdir $outputDirectory
+cd $outputDirectory
+source $DARK_FISH_TECHNOLOGY
+
+DarkFishTechnology_initializeDirectory
+DarkFishTechnology_prepareSample $sampleDirectory
+pairs=$(DarkFishTechnology_getPairs)
+
+mpiexec -version &> meta/mpiexec.version
+Ray -version &> meta/ray.version
+
+command="mpiexec -output-filename ComputeCore -n $processors Ray -o Assembly -k $kmerLength $pairs"
+
+# EMBL_CDS sequences
+geneSequences=$GENOMES_DIRECTORY/EMBL_CDS+GO/EMBL_CDS_Sequences
+
+# annotation for EMBL_CDS objects
+annotations=$GENOMES_DIRECTORY/EMBL_CDS+GO/000-Annotations.txt
+
+# ontologies in obo format, as downloaded from geneontologies.org
+ontologies=$GENOMES_DIRECTORY/EMBL_CDS+GO/000-Ontologies.txt
+
+command="$command -search $geneSequences -gene-ontologies $ontologies $annotations "
+
+DarkFishTechnology_runCommand 0 "$command"
+
+
+
