@@ -18,6 +18,7 @@ module load mpi/openmpi/1.4.5_gcc
 export DARK_FISH_TECHNOLOGY_BASE_SEARCH_DIR=/rap/nne-790-ab/genomes/RayKmerSearchStuff/last-build
 
 export TAXONOMY_DIRECTORY=/rap/nne-790-ab/genomes/taxonomy/last-build
+export GENOMES_DIRECTORY=/rap/nne-790-ab/genomes
 
 DARK_FISH_TECHNOLOGY_DIRECTORY=/rap/nne-790-ab/software/NGS-Pipelines/
 BWA_PATH=/rap/nne-790-ab/software/bwa-0.6.1
