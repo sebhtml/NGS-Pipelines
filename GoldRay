@@ -27,7 +27,7 @@ annotations=$GENOMES_DIRECTORY/EMBL_CDS+GO/000-Annotations.txt
 # ontologies in obo format, as downloaded from geneontologies.org
 ontologies=$GENOMES_DIRECTORY/EMBL_CDS+GO/000-Ontologies.txt
 
-command="$command -search $geneSequences -gene-ontologies $ontologies $annotations "
+command="$command -search $geneSequences -gene-ontology $ontologies $annotations "
 
 DarkFishTechnology_runCommand 0 "$command"
 
