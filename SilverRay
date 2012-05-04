@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# SilverRay	gene ontology profiling + taxonomy profiling + resistance gene profiling
+
 kmerLength=$1
 sampleDirectory=$2
 processors=$3
@@ -47,7 +49,7 @@ command="$command -search $geneSequences -gene-ontology $ontologies $annotations
 ## taxonomy profiling
 ##
 
-command=$command \
+command="$command \
  -search \
  $GENOMES_DIRECTORY/RayKmerSearchStuff/last-build/ARDB \
  -search \
@@ -61,11 +63,11 @@ command=$command \
  -with-taxonomy \
  $GENOMES_DIRECTORY/taxonomy/last-build/Genome-to-Taxon.tsv \
  $GENOMES_DIRECTORY/taxonomy/last-build/TreeOfLife-Edges.tsv \
- $GENOMES_DIRECTORY/taxonomy/last-build/Taxon-Names.tsv
+ $GENOMES_DIRECTORY/taxonomy/last-build/Taxon-Names.tsv"
 
-echo $command
+#echo $command
 
-#DarkFishTechnology_runCommand 0 "$command"
+DarkFishTechnology_runCommand 0 "$command"
 
 
 
