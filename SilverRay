@@ -1,0 +1,71 @@
+#!/bin/bash
+
+kmerLength=$1
+sampleDirectory=$2
+processors=$3
+outputDirectory=$4
+
+mkdir $outputDirectory
+cd $outputDirectory
+source $DARK_FISH_TECHNOLOGY
+
+DarkFishTechnology_initializeDirectory
+DarkFishTechnology_prepareSample $sampleDirectory
+pairs=$(DarkFishTechnology_getPairs)
+
+mpiexec -version &> meta/mpiexec.version
+Ray -version &> meta/ray.version
+
+##
+## base command
+##
+
+command="mpiexec -output-filename ComputeCore -n $processors Ray -o Assembly -k $kmerLength "
+
+##
+## add sequence reads
+##
+
+command="$command $pairs"
+
+##
+##  ontology profiling
+##
+
+# EMBL_CDS sequences
+geneSequences=$GENOMES_DIRECTORY/EMBL_CDS+GO/EMBL_CDS_Sequences
+
+# annotation for EMBL_CDS objects
+annotations=$GENOMES_DIRECTORY/EMBL_CDS+GO/000-Annotations.txt
+
+# ontologies in obo format, as downloaded from geneontologies.org
+ontologies=$GENOMES_DIRECTORY/EMBL_CDS+GO/000-Ontologies.txt
+
+command="$command -search $geneSequences -gene-ontology $ontologies $annotations "
+
+##
+## taxonomy profiling
+##
+
+command=$command \
+ -search \
+ $GENOMES_DIRECTORY/RayKmerSearchStuff/last-build/ARDB \
+ -search \
+ $GENOMES_DIRECTORY/RayKmerSearchStuff/last-build/Bacteria-Genomes \
+ -search \
+ $GENOMES_DIRECTORY/RayKmerSearchStuff/last-build/HumanChromosomes \
+ -search \
+ $GENOMES_DIRECTORY/RayKmerSearchStuff/last-build/NCBI-Bacteria_DRAFT \
+ -search \
+ $GENOMES_DIRECTORY/RayKmerSearchStuff/last-build/Viruses-Genomes \
+ -with-taxonomy \
+ $GENOMES_DIRECTORY/taxonomy/last-build/Genome-to-Taxon.tsv \
+ $GENOMES_DIRECTORY/taxonomy/last-build/TreeOfLife-Edges.tsv \
+ $GENOMES_DIRECTORY/taxonomy/last-build/Taxon-Names.tsv
+
+echo $command
+
+#DarkFishTechnology_runCommand 0 "$command"
+
+
+

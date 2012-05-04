@@ -1,0 +1,9 @@
+All the Ray wrappers do de novo assembly.
+
+GoldRay		gene ontology profiling
+GreenRay	taxonomy profiling + resistance gene profiling
+SilverRay	gene ontology profiling + taxonomy profiling + resistance gene profiling
+VioletRay	de novo assembly only
+WhiteRay	de novo assembly only, maximum contig length for ChIP-Seq
+
+
