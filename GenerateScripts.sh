@@ -16,7 +16,7 @@ massiveSubmit=$template"-Launch.sh"
 
 echo ""> $massiveSubmit
 
-for i in $(cat SampleList.txt)
+for i in $(cat $list)
 do
 	command="s/__SAMPLE__/$i/g"
 	item=$template-$i.sh
