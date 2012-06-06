@@ -5,5 +5,16 @@ GreenRay	taxonomy profiling + resistance gene profiling
 SilverRay	gene ontology profiling + taxonomy profiling + resistance gene profiling
 VioletRay	de novo assembly only
 WhiteRay	de novo assembly only, maximum contig length for ChIP-Seq
+DiamondRay	de novo assembly of RNA-Seq data + profiling of transcripts
 
 
+== Easy-to-use names ==
+
+for i in $(ls|grep Overlord); do echo "$i -> $(readlink $i)"; done >> README.Ray
+
+Ray.Overlord.ChIP-Seq -> WhiteRay
+Ray.Overlord.DenovoAssembly -> VioletRay
+Ray.Overlord.Denovo+BioAbundances -> GreenRay
+Ray.Overlord.Denovo+Ontology -> GoldRay
+Ray.Overlord.Denovo+taxonomy+ontology -> SilverRay
+Ray.Overlord.RNA-Seq+Denovo -> DiamondRay
