@@ -301,7 +301,13 @@ DarkFishTechnology_getPairs(){
 	done
 
 	# get unpaired fasta
-	for file1 in $(ls Sample|grep -v _1.fast|grep -v _R1_|grep -v _R2_|grep -v _2.fast)
+	for file1 in $(ls Sample|grep -v _1.fast|grep -v _R1_|grep -v _R2_|grep -v _2.fast|grep fasta)
+	do
+		pairs=$pairs" -s Sample/$file1 "
+	done
+
+	# get unpaired fastq
+	for file1 in $(ls Sample|grep -v _1.fast|grep -v _R1_|grep -v _R2_|grep -v _2.fast|grep fastq)
 	do
 		pairs=$pairs" -s Sample/$file1 "
 	done
