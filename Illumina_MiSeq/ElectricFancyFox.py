@@ -1,6 +1,6 @@
 #!/usr/bin/env python
-# Title: "Electric Fancy Fox . Python"
 # encoding: utf-8
+# Title: "Electric Fancy Fox . Python"
 # written by sebHTML (S. Boisvert)
 # 2012-06-11
 # reason for creating this software:
