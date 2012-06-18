@@ -2,13 +2,21 @@ The Illumina(R) MiSeq(TM) from Illumina Inc.
 produces a sample sheet file on board, but it is not compatible
 with Illumina(R) CASAVA.
 
+written by Sébastien Boisvert
 
+== Usage ==
 
+ElectricFancyFox MiSeqSheet.csv CASAVA-Sheet.csv
 
-Legal stuff.
+== Features ==
+
+This will work for runs with mono or dual indexes.
+
+== Legal stuff ==
 
 ILLUMINA® is a registered trademark of Illumina, Inc.
 
+== File formats ==
 
 <This is a Illumina(R) MiSeq(R) SampleSheet>
 

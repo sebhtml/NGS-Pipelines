@@ -60,6 +60,9 @@ Sample_ID,Sample_Name,Sample_Plate,Sample_Well,Sample_Project,index,I7_Index_ID,
 
 </This is a Illumina(R) MiSeq(R) SampleSheet>
 
+for dual indexes:
+
+Sample_ID,Sample_Name,Sample_Plate,Sample_Well,Sample_Project,index,I7_Index_ID,index2,I5_Index_ID,Description,GenomeFolder
 
 <This is a Illumina(R) CASAVA(R) SampleSheet>
 
@@ -141,6 +144,10 @@ for line in open(miseqSampleSheet):
 		sys.exit(1)
 
 	index=tokens[5].strip()
+
+	if len(tokens)==11:
+		index=tokens[5].strip()+"-"+tokens[7].strip()
+		
 
 # CASAVA format
 #FCID,Lane,SampleID,SampleRef,Index,Description,Control,Recipe,Operator,SampleProject
