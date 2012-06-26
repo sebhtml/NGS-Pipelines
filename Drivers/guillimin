@@ -5,6 +5,9 @@ if test -d /sb
 then
 
 module purge
+module load gcc/4.5.3
+module load openmpi/1.4.3-gcc
+
 
 echo "[Driver] Hello, this is QLogic-equipped guillimin -- HOW ARE YOU TODAY ? "
 
@@ -27,7 +30,6 @@ BOWTIE_PATH=$softwareBase/bowtie2-2.0.0-beta5
 
 
 RAY_PATH=$softwareBase/RayAppBuilds/last-build
-module load openmpi/1.4.3-gcc
 
 ##############################################################
 
