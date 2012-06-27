@@ -8,9 +8,9 @@ sampleDirectory=$2
 processors=$3
 outputDirectory=$4
 
-$minimum=5
-$stepping=5
-$maximum=100
+minimum=5
+stepping=5
+maximum=100
 
 mkdir $outputDirectory
 cd $outputDirectory
