@@ -11,6 +11,9 @@
 class SamProcessor:
 	# constructor
 	def __init__(self):
+
+		self.debug=False
+
 		self.column_RNAME=3
 		self.column_POS=4
 		self.column_SEQ=10
@@ -48,12 +51,13 @@ class SamProcessor:
 
 		reference=tokens[self.column_RNAME-1].strip()
 
-		if reference==self.UNMAPPED:
+		position=int(tokens[self.column_POS-1].strip())
+
+		if reference==self.UNMAPPED or position == 0:
 			self.processedEntries+=1
 			self.unmapped=True
 			return
 
-		position=int(tokens[self.column_POS-1].strip())
 		sequenceLength=len(tokens[self.column_SEQ-1].strip())
 
 		# this is the first entry
@@ -81,24 +85,38 @@ class SamProcessor:
 			self.cacheStore[cachedPosition]+=1
 			i+=1
 
+		assert position >= self.lastPosition
+
 		self.lastPosition=position
+
+		if self.debug:
+			print "updateReferencePositionCacheEntries position="+str(position)
+
 		self.processedEntries+=1
 
 	# flush cache entries with 0 future references
 	def flushNotReferencedCacheEntries(self):
+		if self.debug:
+			print "flushNotReferencedCacheEntries lastPosition="+str(self.lastPosition)
+
 		if self.lastPosition==None:
 			return
 
 		keys=self.cacheStore.keys()
+
+		keys.sort()
 
 		for cachedPosition in keys:
 			if cachedPosition < self.lastPosition:
 				self.flushCacheEntry(cachedPosition)
 
 	def flushAllCacheEntries(self):
-		print "flushing all cache entries"
+		if self.debug:
+			print "flushing all cache entries"
 
 		keys=self.cacheStore.keys()
+
+		keys.sort()
 
 		for cachedPosition in keys:
 			self.flushCacheEntry(cachedPosition)
@@ -107,7 +125,8 @@ class SamProcessor:
 			# before closing, flush all empty positions
 			# from lastFlushedPosition+1 to referenceLength
 
-			self.flushEmptyEntries(self.lastFlushedPosition+1,self.referenceLengths[self.currentReference])
+			if self.lastFlushedPosition+1 <= self.referenceLengths[self.currentReference]:
+				self.flushEmptyEntries(self.lastFlushedPosition+1,self.referenceLengths[self.currentReference])
 			self.file.close()
 			self.file=None
 
@@ -147,7 +166,8 @@ class SamProcessor:
 			self.flushEmptyEntries(1,cachedPosition-1)
 
 		# flush from lastFlushedPosition+1 to cachedPosition-1
-		self.flushEmptyEntries(self.lastFlushedPosition+1,cachedPosition-1)
+		if self.lastFlushedPosition+1 <= cachedPosition-1:
+			self.flushEmptyEntries(self.lastFlushedPosition+1,cachedPosition-1)
 
 		depth=self.cacheStore[cachedPosition]
 		self.writeEntry(cachedPosition,depth)
@@ -155,6 +175,14 @@ class SamProcessor:
 		if depth not in self.frequencies:
 			self.frequencies[depth]=0
 		self.frequencies[depth]+=1
+
+		if cachedPosition <= self.lastFlushedPosition:
+			print "Can not flush cachedPosition= "+str(cachedPosition)+" lastFlushedPosition="+str(self.lastFlushedPosition)
+
+		assert cachedPosition > self.lastFlushedPosition
+
+		if self.debug:
+			print "flushCacheEntry lastFlushedPosition="+str(self.lastFlushedPosition)
 
 		self.lastFlushedPosition=cachedPosition
 	
@@ -175,6 +203,17 @@ class SamProcessor:
 		return self.unmapped
 
 	def flushEmptyEntries(self,startPosition,endPosition):
+
+		if startPosition > endPosition:
+			print "Error "+str(startPosition)+" "+str(endPosition)
+
+		assert startPosition <= endPosition
+		assert startPosition > self.lastFlushedPosition
+		assert endPosition > self.lastFlushedPosition
+
+		if self.debug and startPosition <= endPosition:
+			print "flushEmptyEntries with "+str(startPosition)+" to "+str(endPosition)+", "+str(endPosition-startPosition+1)+" positions lastFlushedPosition="+str(self.lastFlushedPosition)
+
 
 		i=startPosition
 		while i<=endPosition:
