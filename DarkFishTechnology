@@ -280,34 +280,34 @@ DarkFishTechnology_initializeDirectory(){
 DarkFishTechnology_getPairs(){
 	pairs=""
 	# get pairs with _R1 for left and _R2 for right
-	for r1 in $(ls Sample|grep _R1_)
+	for r1 in $(ls Sample|grep _R1)
 	do
-		r2=$(echo $r1|sed 's/_R1_/_R2_/g')
+		r2=$(echo $r1|sed 's/_R1/_R2/g')
 		pairs=$pairs" -p Sample/$r1 Sample/$r2 "
 	done
 
 	# get pairs with _1 for left and _2 for right, fastq
-	for file1 in $(ls Sample|grep _1.fastq|grep -v _R1_|grep -v _R2_)
+	for file1 in $(ls Sample|grep _1.fastq|grep -v _R1|grep -v _R2)
 	do
 		file2=$(echo $file1|sed 's/_1.fastq/_2.fastq/g')
 		pairs=$pairs" -p Sample/$file1 Sample/$file2 "
 	done
 
 	# get pairs with _1 for left and _2 for right, fasta
-	for file1 in $(ls Sample|grep _1.fasta|grep -v _R1_|grep -v _R2_)
+	for file1 in $(ls Sample|grep _1.fasta|grep -v _R1|grep -v _R2)
 	do
 		file2=$(echo $file1|sed 's/_1.fasta/_2.fasta/g')
 		pairs=$pairs" -p Sample/$file1 Sample/$file2 "
 	done
 
 	# get unpaired fasta
-	for file1 in $(ls Sample|grep -v _1.fast|grep -v _R1_|grep -v _R2_|grep -v _2.fast|grep fasta)
+	for file1 in $(ls Sample|grep -v _1.fast|grep -v _R1|grep -v _R2|grep -v _2.fast|grep fasta)
 	do
 		pairs=$pairs" -s Sample/$file1 "
 	done
 
 	# get unpaired fastq
-	for file1 in $(ls Sample|grep -v _1.fast|grep -v _R1_|grep -v _R2_|grep -v _2.fast|grep fastq)
+	for file1 in $(ls Sample|grep -v _1.fast|grep -v _R1|grep -v _R2|grep -v _2.fast|grep fastq)
 	do
 		pairs=$pairs" -s Sample/$file1 "
 	done
