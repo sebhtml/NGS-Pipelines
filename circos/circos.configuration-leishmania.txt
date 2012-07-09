@@ -1,0 +1,163 @@
+# circos configuration file for making figures.
+
+<<include etc/housekeeping.conf>>
+
+
+<colors>
+<<include etc/colors.conf>>
+</colors>
+
+<fonts>
+<<include etc/fonts.conf>>
+</fonts>
+
+<ideogram>
+
+<spacing>
+
+default = 0.9u
+break   = 1u
+
+axis_break_at_edge = yes
+axis_break         = yes
+axis_break_style   = 2
+
+<break_style 1>
+stroke_color = black
+fill_color   = grey
+thickness    = 0.25r
+stroke_thickness = 2
+</break>
+
+<break_style 2>
+stroke_color     = black
+stroke_thickness = 3
+thickness        = 1.5r
+</break>
+
+</spacing>
+
+# thickness (px) of chromosome ideogram
+thickness        = 60p
+stroke_thickness = 2
+# ideogram border color
+stroke_color     = black
+fill             = yes
+# the default chromosome color is set here and any value
+# defined in the karyotype file overrides it
+fill_color       = black
+
+# fractional radius position of chromosome ideogram within image
+radius         = 0.85r
+show_label     = yes
+label_with_tag = yes
+label_font     = condensedbold
+label_radius   = dims(ideogram,radius) + 0.1r
+label_size     = 40p
+
+# cytogenetic bands
+band_stroke_thickness = 2
+
+# show_bands determines whether the outline of cytogenetic bands
+# will be seen
+show_bands            = yes
+# in order to fill the bands with the color defined in the karyotype
+# file you must set fill_bands
+fill_bands            = yes
+
+</ideogram>
+
+show_ticks          = yes
+show_tick_labels    = yes
+
+<ticks>
+radius               = dims(ideogram,radius_outer)
+multiplier           = 100/1u
+
+<tick>
+spacing        = 2u
+size           = 8p
+thickness      = 2p
+color          = black
+show_label     = yes
+label_size     = 20p
+label_offset   = 5p
+format         = %d
+suffix=kb
+</tick>
+
+</ticks>
+
+
+
+karyotype   = leishmania-major-2.4.txt
+
+<image>
+dir = ./
+file  = test.png
+png = yes
+# radius of inscribed circle in image
+radius         = 3000p #1500p
+background     = white
+# by default angle=0 is at 3 o'clock position
+angle_offset   = -90
+
+24bit = yes
+#auto_alpha_colors = yes
+#auto_alpha_steps  = 5
+
+</image>
+
+chromosomes_units = 100000
+chromosomes_display_default = yes
+
+
+<plots>
+
+<plot>
+
+show    = yes
+type    = line
+max_gap = 1u
+file    = signals.txt
+color = black
+thickness = 1
+min   = 0
+max   = 10000
+r0    = 0.7r
+r1    = 0.95r
+
+
+<backgrounds>
+
+<background>
+
+r0    = 0.7r
+r1    = 0.95r
+
+color = vlgrey
+stroke_color = black
+stroke_thickness = 2
+
+
+</background>
+
+</backgrounds>
+
+<axes>
+<axis>
+color     = grey
+thickness = 2
+spacing   = 1000
+r0    = 0.7r
+r1    = 0.95r
+
+</axis>
+
+
+</axes>
+
+</plot>
+</plots>
+
+
