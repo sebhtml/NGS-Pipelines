@@ -53,4 +53,6 @@ export PATH=$RAY_PATH:$PATH
 
 export PATH=$BOWTIE_PATH:$PATH
 
+source /rap/nne-790-ab/software/prodigal/prodigal.v2_60/module-load.sh
+
 fi
