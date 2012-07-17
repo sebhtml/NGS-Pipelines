@@ -275,6 +275,7 @@ DarkFishTechnology_initializeDirectory(){
 	DarkFishTechnology_runCommand 0 "uname -a > meta/uname"
 	DarkFishTechnology_runCommand 0 "hostname > meta/hostname"
 
+	ls -l $RAY_PATH > meta/ls-l-RAY_PATH &> /dev/null
 }
 
 DarkFishTechnology_getPairs(){
