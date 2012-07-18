@@ -22,7 +22,9 @@ types["f"]="family"
 types["g"]="genus"
 types["s"]="species"
 
-for line in open("HMP.ab.txt"):
+theFile=sys.argv[1]
+
+for line in open(theFile):
 	tokens=line.split("\t")
 
 	if tokens[0]=='sid':
@@ -45,7 +47,7 @@ for line in open("HMP.ab.txt"):
 
 		typeName=types[theType]
 
-		name=newTokens[1].replace("_"," ")
+		name=newTokens[1].replace("_"," ").replace("unclassified","").strip()
 
 		#typeName+" "+name
 
