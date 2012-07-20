@@ -57,14 +57,17 @@ def findOffset(sequence,adaptor):
 def process(header,sequence,dummy,quality,adaptor):
 	offset=findOffset(sequence,adaptor)
 
-	count=offset+1
-	if offset==0:
-		count=0
+#	count=offset+1
+#	if offset==0:
+#		count=0
 
-	print header
-	print sequence[0:count]
-	print dummy
-	print quality[0:count]
+	if offset!=0:
+		print header
+#		print sequence[0:count]
+		print sequence[0:offset]
+		print dummy
+#		print quality[0:count]
+		print quality[0:offset]
 
 adaptor=sys.argv[1]
 
