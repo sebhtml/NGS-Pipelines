@@ -24,8 +24,15 @@ class DistributionCalculator:
                         self.distribution[length] += count
 
         def printResults(self):
+		# Calculate total number of sequences
+		total = 0
+		for i in range(self.maxLength):
+			total += self.distribution[i]
+		# Print percentage of total for each lenght
                 for i in range(self.maxLength):
-                        print str(i) + "\t" + str(self.distribution[i])
+			percent = self.distribution[i] / float(total) * 100
+                        print str(i) + "\t" + str(percent)
+	
 
 import sys
 
