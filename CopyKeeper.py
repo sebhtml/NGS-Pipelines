@@ -16,18 +16,23 @@ class CopyKeeper:
 		self.clear()
 
 	def clear(self):
-		self.seqCounts = defaultdict(int)
+#		self.seqCounts = defaultdict(int)
+		self.seqCounts = {}
 
-	def processSequence(sequence):
-		self.seqCounts[sequence] += 1
+	def processSequence(self, sequence):
+		if sequence in self.seqCounts:
+			self.seqCounts[sequence] += 1
+		else:
+			self.seqCounts[sequence] = 1
 
-	def printResults():
+	def printResults(self):
 		sorted(self.seqCounts, key = self.seqCounts.get)
 		i = 0
-		for seq in sorted(self.seqCounts, key = operator.itemgetter(1), reverse = True):
+		for seq in sorted(self.seqCounts, key = self.seqCounts.get, reverse = True):
 			if self.seqCounts[seq] >= self.minCopy:
-				print "> PP_" + str(i) + "Count: " + str(self.seqCounts[seq])
+				print "> PP_" + str(i) + " Count: " + str(self.seqCounts[seq])
 				print seq
+				i += 1
 
 import sys
 
