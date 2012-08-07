@@ -4,9 +4,9 @@
 # 2012-07-23
 
 """
-This script calculates the distribution of sequence's length from a fastq file
+This script calculates the distribution of sequence's length from a fasta file
 Usage:
-cat joe.fastq | ./LengthDistribution.py <maxLength> > out.distribution
+cat joe.fasta | ./LengthDistribution.py <maxLength> > distribution.txt
 maxLength: Maximum sequence length to compute
 """
 
@@ -18,14 +18,21 @@ class DistributionCalculator:
         def clear(self):
                 self.distribution = [0] * self.maxLength
 
-        def processSequence(self, sequence):
+        def processSequence(self, sequence, count):
                 length = len(sequence)
                 if length <= self.maxLength:
-                        self.distribution[length] += 1
+                        self.distribution[length] += count
 
         def printResults(self):
+		# Calculate total number of sequences
+		total = 0
+		for i in range(self.maxLength):
+			total += self.distribution[i]
+		# Print percentage of total for each lenght
                 for i in range(self.maxLength):
-                        print str(i) + "\t" + str(self.distribution[i])
+			percent = self.distribution[i] / float(total) * 100
+                        print str(i) + "\t" + str(percent)
+	
 
 import sys
 
@@ -39,13 +46,15 @@ if __name__=="__main__":
 
         i =0
         for line in sys.stdin:
+		if i==0:
+			count = int(line.split()[3])
                 if i==1:
                         sequence = line.strip()
-                        distributionCalculator.processSequence(sequence)
+                        distributionCalculator.processSequence(sequence, count)
 
                 i+=1
 
-                if i==4:
+                if i==2:
                         i=0
 
         distributionCalculator.printResults()
