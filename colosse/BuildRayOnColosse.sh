@@ -9,7 +9,7 @@ builds=/rap/nne-790-ab/software/RayAppBuilds/
 
 make clean
 
-make ASSERT=y DEBUG=y HAVE_LIBZ=y HAVE_LIBBZ2=y J=10 PREFIX=$builds/$id
+make ASSERT=y DEBUG=y HAVE_LIBZ=y HAVE_LIBBZ2=y EXTRA=-march=native J=10 PREFIX=$builds/$id
 make install
 
 cd $builds
