@@ -19,7 +19,7 @@ pairs=$(DarkFishTechnology_getPairs)
 mpiexec -version &> meta/mpiexec.version
 Ray -version &> meta/ray.version
 
-command="mpiexec -n $processors Ray -k $kmerLength $pairs -o Assembly"
+command="mpiexec -n $processors -output-filename CPU Ray -k $kmerLength $pairs -o Assembly"
 
 DarkFishTechnology_runCommand 0 "$command"
 
