@@ -1,0 +1,59 @@
+#!/bin/bash
+# Wyvern Maw is a program that dump a node status
+# Author: Sebastien Boisvert
+
+echo "<WyvernMaw>"
+
+function RunCommand(){
+	action=$1
+
+	echo ""
+	echo "<WyvernMawObject action=\"$action\">"
+
+	eval "$action"
+
+	echo "</WyvernMawObject>"
+}
+
+
+RunCommand "uname -a"
+RunCommand "gcc --version|head -n1"
+RunCommand "as --version|head -n1"
+RunCommand "mkdir --version|head -n1"
+RunCommand "mpiexec --version |head -n1"
+RunCommand "strip --version|head -n1"
+
+
+RunCommand "cat /proc/cpuinfo"
+
+
+RunCommand "cat /proc/meminfo"
+
+
+RunCommand "/sbin/lspci"
+
+
+RunCommand "/sbin/lsusb"
+
+
+RunCommand "w|head -n1"
+
+
+RunCommand "/sbin/ifconfig"
+
+
+RunCommand "mount"
+
+RunCommand "df"
+
+RunCommand "df -h"
+
+RunCommand "df -i"
+
+RunCommand "ps aux|wc -l"
+
+RunCommand "ps aux"
+
+
+
+echo "</WyvernMaw>"
