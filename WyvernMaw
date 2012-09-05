@@ -21,7 +21,7 @@ RunCommand "uname -a"
 RunCommand "gcc --version|head -n1"
 RunCommand "as --version|head -n1"
 RunCommand "mkdir --version|head -n1"
-RunCommand "mpiexec --version |head -n1"
+RunCommand "mpiexec --version &>/dev/stdout|head -n1"
 RunCommand "strip --version|head -n1"
 
 
