@@ -15,6 +15,7 @@ function RunCommand(){
 	echo "</WyvernMawObject>"
 }
 
+RunCommand "hostname"
 
 RunCommand "uname -a"
 RunCommand "gcc --version|head -n1"
