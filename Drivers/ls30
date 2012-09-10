@@ -1,0 +1,51 @@
+
+if test -d /Bigbackup
+then
+
+echo "Detected ls30"
+
+projectBase=""
+
+
+export DARK_FISH_TECHNOLOGY_BASE_SEARCH_DIR=$projectBase/genomes/RayKmerSearchStuff/last-build
+
+export TAXONOMY_DIRECTORY=$projectBase/genomes/taxonomy/last-build
+
+softwareBase=$projectBase/software
+
+DARK_FISH_TECHNOLOGY_DIRECTORY=$softwareBase/NGS-Pipelines/
+BWA_PATH=$softwareBase/bwa-0.6.1
+SAMTOOLS_PATH=$softwareBase/samtools-0.1.18
+BCFTOOLS_PATH=$softwareBase/samtools-0.1.18/bcftools
+SAMSTAT_PATH=$softwareBase/samstat-1.08/src
+BOWTIE_PATH=$softwareBase/bowtie2-2.0.0-beta5
+
+
+RAY_PATH=$softwareBase/RayAppBuilds/last-build
+
+##############################################################
+
+# technology
+export DARK_FISH_TECHNOLOGY=$DARK_FISH_TECHNOLOGY_DIRECTORY/DarkFishTechnology
+
+export PATH=$DARK_FISH_TECHNOLOGY_DIRECTORY:$PATH
+
+# for RedWave and BlueTsunami
+
+export PATH=$BWA_PATH:$PATH
+export PATH=$SAMTOOLS_PATH:$PATH
+export PATH=$BCFTOOLS_PATH:$PATH
+export PATH=$SAMSTAT_PATH:$PATH
+
+
+# for VioletRay
+
+export PATH=$RAY_PATH:$PATH
+
+
+# for OrangeSpark
+
+export PATH=$BOWTIE_PATH:$PATH
+
+fi
+
