@@ -62,6 +62,8 @@ current=identifier
 path.append(current)
 
 while current in parentTable:
+	if current==parentTable[current]:
+		break
 	current=parentTable[current]
 	path.append(current)
 
