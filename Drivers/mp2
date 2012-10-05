@@ -26,7 +26,10 @@ BOWTIE_PATH=$softwareBase/bowtie2-2.0.0-beta5
 RAY_PATH=$softwareBase/RayAppBuilds/last-build
 
 # this one ships with gcc 4.7.0 !
-module load openmpi_gcc64/1.6.2
+#module load openmpi_gcc64/1.6.2
+# 1.6.2 is not installed correctly...
+
+module load openmpi_gcc64/1.5.4
 
 ##############################################################
 
