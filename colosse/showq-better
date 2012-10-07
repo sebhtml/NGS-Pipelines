@@ -1,0 +1,15 @@
+#!/bin/bash
+
+for i in $(showq|awk '{print $1}'|grep -v active|grep -v JOBID|grep -v eligible|grep -v Total|grep -v blocked)
+do
+	checkjob $i &> info
+	name=$(grep ^AName info|awk '{print $2}')
+	user=$(grep ^Creds info|awk '{print $2}'|sed 's/user://g')
+	id=$i
+	state=$(grep ^State info|awk '{print $2}')
+
+	echo "$id	$name	$user	$state"
+done
+
+
+
