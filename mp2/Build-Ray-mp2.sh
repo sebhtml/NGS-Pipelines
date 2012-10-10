@@ -17,4 +17,6 @@ cd $builds
 rm last-build
 ln -s $id last-build
 
+cd ~/git-clones/ray
+
 echo "Ray $id has been installed."
