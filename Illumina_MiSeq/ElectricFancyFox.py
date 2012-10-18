@@ -3,6 +3,7 @@
 # Title: "Electric Fancy Fox . Python"
 # written by sebHTML (S. Boisvert)
 # 2012-06-11
+# Updated 2012-10-17 by plpla (P-L. Plante)
 # reason for creating this software:
 #  the last Illumina(R) MiSeq(R) run failed to convert the data on board
 # because of a faulty cluster density.
@@ -62,7 +63,7 @@ Sample_ID,Sample_Name,Sample_Plate,Sample_Well,Sample_Project,index,I7_Index_ID,
 
 for dual indexes:
 
-Sample_ID,Sample_Name,Sample_Plate,Sample_Well,Sample_Project,index,I7_Index_ID,index2,I5_Index_ID,Description,GenomeFolder
+Sample_ID,Sample_Name,Sample_Plate,Sample_Well,I7_Index_ID,index,I5_Index_ID,index2,Sample_Project,Description
 
 <This is a Illumina(R) CASAVA(R) SampleSheet>
 
@@ -145,7 +146,7 @@ for line in open(miseqSampleSheet):
 
 	index=tokens[5].strip()
 
-	if len(tokens)==11:
+	if len(tokens)==10:
 		index=tokens[5].strip()+"-"+tokens[7].strip()
 		
 
