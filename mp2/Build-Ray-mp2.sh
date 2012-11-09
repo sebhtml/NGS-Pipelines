@@ -10,7 +10,7 @@ builds=$root/software/RayAppBuilds/
 
 make clean
 
-make ASSERT=y DEBUG=y HAVE_LIBZ=y HAVE_LIBBZ2=y EXTRA=-march=native J=10 PREFIX=$builds/$id
+make ASSERT=y HAVE_LIBZ=y HAVE_LIBBZ2=y -j 10 PREFIX=$builds/$id
 make install
 
 cd $builds
