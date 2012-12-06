@@ -3,6 +3,7 @@
 # This is a solver for a simple binning problem
 # It just do random swap and minimize an objective function
 # Author: Sébastien Boisvert
+# License: GPLv3
 
 import sys
 import random
@@ -91,6 +92,11 @@ lastPrint=0
 printPeriod=10000
 maximumIterationsWithoutImprovement=10000000
 beforeStop=maximumIterationsWithoutImprovement
+changes=0
+lastChange=0
+arrivalPeriod=0
+sumOfArrivals=0
+averageArrival=0
 
 while beforeStop>=0:
 
@@ -115,7 +121,7 @@ while beforeStop>=0:
 	newScore=getScore(binWeights,average)
 
 	if iteration>= lastPrint+printPeriod:
-		print("Iteration: "+str(iteration)+" new score: "+str(score)+" iterations left: "+str(beforeStop))
+		print("Iteration: "+str(iteration)+" score: "+str(score)+" left: "+str(beforeStop)+" changes: "+str(changes)+" arrival: "+str(averageArrival))
 		lastPrint=iteration
 
 # revert the swap
@@ -129,12 +135,18 @@ while beforeStop>=0:
 
 	score=newScore
 	beforeStop=maximumIterationsWithoutImprovement
+	arrivalPeriod=iteration-lastChange
+
+	changes+=2
+
+	sumOfArrivals+=arrivalPeriod
+	averageArrival=sumOfArrivals/(changes/2)
+	lastChange=iteration
 
 	objects[objectA][indexBin]=newBinA
 	objects[objectA+1][indexBin]=newBinA
 	objects[objectB][indexBin]=newBinB
 	objects[objectB+1][indexBin]=newBinB
-
 
 	lastImprovement=iteration
 	iteration+=1
