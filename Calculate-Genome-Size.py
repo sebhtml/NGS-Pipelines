@@ -40,7 +40,12 @@ for line in stream:
 stream.close()
 
 averageCoverage=sum/count
-genomeSize=count
 
-print("Estimated haploid genome size: "+str(genomeSize)+" with average k-mer coverage valued at "+str(averageCoverage))
+# we must divide by two because we only need one DNA strand
+genomeSize=count/2
+
+print("Starting k-mer coverage: "+str(startingCoverage))
+print("Ending k-mer coverage: "+str(endingCoverage))
+print("Average k-mer coverage: "+str(averageCoverage))
+print("Estimated haploid genome size: "+str(genomeSize))
 
