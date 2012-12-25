@@ -10,7 +10,7 @@ builds=$root/software/RayAppBuilds/
 
 make clean
 
-make ASSERT=y HAVE_LIBZ=y HAVE_LIBBZ2=y -j 10 PREFIX=$builds/$id CXXFLAGS=" -O3 -std=c++98 -Wall -march=native "
+make ASSERT=y HAVE_LIBZ=y HAVE_LIBBZ2=y -j 10 PREFIX=$builds/$id CXXFLAGS="-g -O3 -std=c++98 -Wall -march=native "
 make install
 
 cd $builds
