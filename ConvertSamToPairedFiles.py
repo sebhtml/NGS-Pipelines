@@ -80,6 +80,7 @@ for line in stream:
 			rightFile.close()
 			rightFile=None
 			pairs=0
+			part+=1
 
 stream.close()
 
@@ -87,7 +88,7 @@ stream.close()
 names=store.keys()
 
 part=0
-
+processed=0
 singleFile=None
 
 for queryName in names:
@@ -96,6 +97,13 @@ for queryName in names:
 
 	writeSequence(singleFile,queryName,store[queryName][0],store[queryName][1])
 	del store[queryName]
+	processed+=1
+
+	if processed==sequencesPerFile:
+		singleFile.close()
+		singleFile=None
+		processed=0
+		part+=1
 
 
 sys.stdout.write("\n")
