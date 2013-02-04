@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# encoding: UTF-8
 # Author: Sébastien Boisvert
 
 import sys
