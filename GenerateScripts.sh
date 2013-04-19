@@ -1,12 +1,18 @@
 #!/bin/bash
 # Sébastien Boisvert
-# this script is called as follows:
 
-# GenerateScripts.sh Template.sh SampleList.txt schedulerCommand
-# examples:
+if test $# != 3
+then
+	echo "Welcome !"
+	echo "this script is called as follows:"
 
-# GenerateScripts.sh GreenRayTemplate.sh SampleList.txt msub
-# GenerateScripts.sh GreenRayTemplate.sh SampleList.txt qsub
+	echo "GenerateScripts.sh Template.sh SampleList.txt schedulerCommand"
+	echo "examples:"
+	echo 
+	echo "GenerateScripts.sh GreenRayTemplate.sh SampleList.txt msub"
+	echo "GenerateScripts.sh GreenRayTemplate.sh SampleList.txt qsub"
+	exit
+fi
 
 template=$1
 list=$2
