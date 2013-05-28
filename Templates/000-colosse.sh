@@ -1,20 +1,22 @@
 #!/bin/bash
-#PBS -N Sample_CQDM2-3-2013-02-19-1
-#PBS -o Sample_CQDM2-3-2013-02-19-1.o
-#PBS -e Sample_CQDM2-3-2013-02-19-1.e
+#PBS -N RayRay-__SAMPLE__-2013-01-01-1
+#PBS -o RayRay-__SAMPLE__-2013-01-01-1.stdout
+#PBS -e RayRay-__SAMPLE__-2013-01-01-1.stderr
 #PBS -A nne-790-ac
 #PBS -l walltime=16:00:00
-#PBS -l nodes=32:ppn=8
+#PBS -l nodes=8:ppn=8
 #PBS -q default
+
 cd $PBS_O_WORKDIR
 
-source /rap/nne-790-ab/software/NGS-Pipelines/LoadModules.sh
+echo $PBS_JOBID > RayRay-__SAMPLE__-2013-01-01-1.job
 
-mpiexec -n 128 \
-Ray -k 61 -o Sample_CQDM2-3-2013-02-19-1 \
--write-seeds \
--write-extensions \
--write-kmers \
+module load compilers/gcc/4.8.0
+module load apps/blcr/0.8.4
+module load mpi/openmpi/1.6.4_gcc
+
+mpiexec -n 64 \
+Ray -k 31 -o RayRay-__SAMPLE__-2013-01-01-1.job \
 -p \
  Sample_CQDM2-3/CQDM2-3_Lane5_R1_1.fastq.gz \
  Sample_CQDM2-3/CQDM2-3_Lane5_R2_1.fastq.gz \
