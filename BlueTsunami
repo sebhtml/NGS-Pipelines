@@ -1,6 +1,8 @@
 #!/bin/bash
 # author: Sébastien Boisvert
 # date: 2011-12-23
+# modified: Pier-Luc Plante
+# date: 2014-06-03
 
 # this is some heavy scripting
 # parallel machines in bash
@@ -55,7 +57,11 @@ for file in $(ls Sample)
 do
 	processorNumber=$(($fileNumber%$processors))
 	randomFile=$(DarkFishTechnology_generateCacheEntry)
-	command="( bwa bwasw Reference/Reference.fasta Sample/$file | gzip > $randomFile ) ; ( DarkFishTechnology_linkCacheEntry $randomFile SamAlignments $file.sam.gz ) ; "
+	if [[ $file == *.bz2 ]]; then
+                command="( bwa bwasw Reference/Reference.fasta <(bzip2 -dc Sample/$file) | gzip > $randomFile ) ; ( DarkFishTechnology_linkCacheEntry $randomFile SamAlignments $file.sam.gz ) ; "
+        else
+		command="( bwa bwasw Reference/Reference.fasta Sample/$file | gzip > $randomFile ) ; ( DarkFishTechnology_linkCacheEntry $randomFile SamAlignments $file.sam.gz ) ; "
+	fi
 
 	processorVariable=processor$processorNumber"SamAlignments"
 	oldValue=$(eval echo \$$processorVariable)
